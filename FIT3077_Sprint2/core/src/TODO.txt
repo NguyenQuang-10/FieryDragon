@@ -1,0 +1,10 @@
+Refactor so that FieryDragon Asset is supplied, not directly invoked
+Refactor Board interface into an Abstract class, and dep inversion that shit, don't do direct composition, recheck
+what composition mean.
+Implement ChitCardManager and ChitCard UI actor
+
+Some board functionality I haven't done:
+- Player can't be on the same square
+
+Organize the main launcher/driver class
+Restructure the thing
