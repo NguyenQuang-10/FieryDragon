@@ -19,11 +19,9 @@ public class MyGame extends Game {
 	private GameScreen gameScreen;
 	public final static int WIDTH = 1920;
 	public final static int HEIGHT = 1080;
-	public Assets assets = FieryDragonAssets.getInstance();
 	
 	@Override
 	public void create () {
-		assets.preload();
 		gameScreen = new GameScreen();
 		setScreen(gameScreen);
 	}

@@ -1,6 +1,7 @@
-Refactor so that FieryDragon Asset is supplied, not directly invoked
-Refactor Board interface into an Abstract class, and dep inversion that shit, don't do direct composition, recheck
-what composition mean.
+Refactor so that FieryDragon Asset is supplied, not directly invoked - THink of a better way to supply asset
+- abolish the singleton
+- class manages their own assets
+
 Implement ChitCardManager and ChitCard UI actor
 
 Some board functionality I haven't done:

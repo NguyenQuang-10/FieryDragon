@@ -1,8 +1,9 @@
-package com.mygdx.game.FieryDragonPrototype;
+package com.mygdx.game.ChitCards;
+
+import com.mygdx.game.Board.Board;
 
 // I think I should make this abstract
 public abstract class ChitCard {
-    private String name;
     final protected AnimalType type;
     final protected int animalCount;
     protected boolean flipped = false;
@@ -25,5 +26,7 @@ public abstract class ChitCard {
     public void resetFlipState() {
         this.flipped = false;
     }
+    public AnimalType getType() {return type; }
+    public int getAnimalCount() { return  animalCount; }
 }
 

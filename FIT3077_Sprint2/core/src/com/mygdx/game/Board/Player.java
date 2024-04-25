@@ -1,18 +1,18 @@
-package com.mygdx.game.FieryDragonPrototype;
+package com.mygdx.game.Board;
 
-public class AbstractPlayer {
+public class Player {
     protected String name;
     protected int position = 0;
-    protected boolean isInCave = true;
+    public boolean isInCave = true;
 
-    public AbstractPlayer(String name) {
+    public Player(String name) {
         this.name = name;
     }
 
     public String getName(){
         return name;
     }
-    public boolean isInCave() {return isInCave;}
+
     public int getPosition(){
         return position;
     }

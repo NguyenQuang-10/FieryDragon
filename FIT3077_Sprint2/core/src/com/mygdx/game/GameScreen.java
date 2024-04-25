@@ -1,13 +1,18 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.FieryDragonImplementations.FieryDragonBoardUI;
-import com.mygdx.game.FieryDragonPrototype.AnimalType;
-import com.mygdx.game.FieryDragonPrototype.AbstractPlayer;
-import com.mygdx.game.FieryDragonPrototype.Player;
+import com.mygdx.game.Board.Board;
+import com.mygdx.game.Board.FDBoard;
+import com.mygdx.game.ChitCards.ChitCardManager;
+import com.mygdx.game.ChitCards.FDChitCardManager;
+import com.mygdx.game.UIComponents.FDBoardUI;
+import com.mygdx.game.ChitCards.AnimalType;
+import com.mygdx.game.Board.Player;
+import com.mygdx.game.UIComponents.FDChitCardManagerUI;
 
 public class GameScreen implements Screen {
     private Stage stage;
@@ -15,11 +20,10 @@ public class GameScreen implements Screen {
     public GameScreen() {
     }
 
-    AbstractPlayer[] players = {new Player("Player 1", "Players\\playerGreen.png"),
-                                new Player("Player 2", "Players\\playerBlue.png"),
-                                new Player("Player 3", "Players\\playerRed.png"),
-                                new Player("Player 4", "Players\\playerYellow.png")
-                                };
+    Player[] players = {new Player("Player 1"),
+                        new Player("Player 2"),
+                        new Player("Player 3"),
+                        new Player("Player 4")};
     AnimalType[] volcanoMap = {
             AnimalType.BABY_DRAGON,
             AnimalType.BAT,
@@ -46,13 +50,18 @@ public class GameScreen implements Screen {
             AnimalType.SPIDER,
             AnimalType.SALAMANDER,
     };
-    FieryDragonBoardUI boardUI = new FieryDragonBoardUI(200, 500, 8, 6 , players, volcanoMap);
+    Board board = new FDBoard(players, volcanoMap);
+    ChitCardManager chitCardManager = new FDChitCardManager(players);
+    FDBoardUI boardUI = new FDBoardUI(200, 500, 8, 6 , board);
+    FDChitCardManagerUI chitCardManagerUI = new FDChitCardManagerUI(390, 170,4,4, board, chitCardManager);
 
     @Override
     public void show() {
         stage = new Stage();
         stage.addActor(boardUI);
+        stage.addActor(chitCardManagerUI);
         stage.setViewport(new StretchViewport(MyGame.WIDTH, MyGame.HEIGHT));
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
