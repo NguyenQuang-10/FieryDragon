@@ -8,7 +8,7 @@ import java.util.*;
 
 // needs to be a singleton
 public class Board {
-     Map<Player, Cave>playerCave = new HashMap<>();
+     Map<Player, Cave>playerCave = new LinkedHashMap<>();
      AnimalType[] volcanoMap;
      int length;
      boolean gameEnded = false;

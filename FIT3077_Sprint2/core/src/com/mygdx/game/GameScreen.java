@@ -12,6 +12,8 @@ import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
 import com.mygdx.game.UIComponents.ChitCardManagerUI;
 
+import java.util.ArrayList;
+
 public class GameScreen implements Screen {
     private Stage stage;
     private FieryDragonGame game;
@@ -49,12 +51,11 @@ public class GameScreen implements Screen {
 
     public GameScreen(FieryDragonGame game) {
         this.game = game;
-        if (game.numberOfPlayers == 2) {
-            players = new Player[]{new Player("Player 1"),new Player("Player 2")};
-        } else {
-            players = new Player[]{new Player("Player 1"),
-                    new Player("Player 2"), new Player("Player 3"), new Player("Player 4")};
+        ArrayList<Player> p = new ArrayList<>();
+        for (int i = 1; i <= game.numberOfPlayers; i++) {
+            p.add(new Player(String.format("Player %d", i)));
         }
+        this.players = p.toArray(new Player[game.numberOfPlayers]);
 
         // BAD PRACTICE, THIS IS TEMPORARY ONLY, REMOVE IN NEXT SPRINT ONCE PROPER MENU IS IMPLEMENTED
         if (game.havePlayerAsObstacle) {

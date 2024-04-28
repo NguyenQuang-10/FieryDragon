@@ -3,13 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.FieryDragonGame;
 
 // Rudementary menu just for this project, won't be used in the next sprint
 public class MenuScreen implements Screen {
@@ -17,7 +15,6 @@ public class MenuScreen implements Screen {
     Stage stage;
     BitmapFont font;
     SpriteBatch batch;
-    OrthographicCamera camera;
 
     int inputCount = 0;
 
@@ -43,44 +40,37 @@ public class MenuScreen implements Screen {
         int y = 125;
         if (inputCount == 0) {
             batch.begin();
-            font.draw(batch, "Initialise board with 2 Players [default is 4]\n Press Y for Yes, N for No\n\nYou are the player on the right if there is 2 players\nYou are the bottom player if there is 4 players",
-                    x ,  y);
+            font.draw(batch, "How many player on board?\n Press 2,3 or 4\n\nYou are always the Green player ",
+                    x, y);
             batch.end();
         } else if (inputCount == 1) {
             batch.begin();
             font.draw(batch, "Initialise board with a player standing in volcano?\n (As obstacle to test movement)\n Press Y for Yes, N for No",
-                    x,  y);
+                    x, y);
             batch.end();
         }
 
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-            inputCount += 1;
-
-            switch (inputCount) {
-                case 1:
-                    game.numberOfPlayers = 2;
-                    break;
-                case 2:
-                    game.havePlayerAsObstacle = true;
-                    break;
+        if (inputCount == 0){
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+                game.numberOfPlayers = 2;
+                inputCount += 1;
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+                game.numberOfPlayers = 3;
+                inputCount += 1;
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+                game.numberOfPlayers = 4;
+                inputCount += 1;
             }
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-            inputCount += 1;
-
-            switch (inputCount) {
-                case 1:
-                    game.numberOfPlayers = 4;
-                    break;
-                case 2:
-                    game.havePlayerAsObstacle = false;
-                    break;
+        } else if (inputCount == 1) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Y)){
+                game.havePlayerAsObstacle = true;
+                inputCount += 1;
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
+                game.havePlayerAsObstacle = false;
+                inputCount += 1;
             }
-        }
-
-        if (inputCount == 2) {
+        } else if (inputCount > 1) {
             game.gameScreen = new GameScreen(game);
             game.setScreen(game.gameScreen);
         }

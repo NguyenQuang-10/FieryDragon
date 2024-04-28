@@ -2,8 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 
-// TODO: we got up until Making the Bucket Move
-
 public class FieryDragonGame extends Game {
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
