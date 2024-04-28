@@ -11,17 +11,17 @@ import com.mygdx.game.ChitCards.ChitCardManager;
 
 import java.util.HashMap;
 
-public class FDChitCardManagerUI extends Group {
+public class ChitCardManagerUI extends Group {
 
     final private ChitCardManager manager;
     final private int maxWidth;
     final private int maxHeight;
     final private HashMap<ChitCard, Texture> chitCardSprites = new HashMap<>();
 
-    public FDChitCardManagerUI(float x, float y,
-                               int maxWidth, int maxHeight,
-                               Board board,
-                               ChitCardManager manager) {
+    public ChitCardManagerUI(float x, float y,
+                             int maxWidth, int maxHeight,
+                             Board board,
+                             ChitCardManager manager) {
         this.manager = manager;
         manager.generateChitCards(board);
         this.maxWidth = maxWidth;
@@ -47,7 +47,7 @@ public class FDChitCardManagerUI extends Group {
         float yOffset = getY();
         for (ChitCard chit : chitCards) {
             Texture sprite = chitCardSprites.get(chit);
-            FDChitCardUI actor = new FDChitCardUI(xOffset, yOffset, sprite, chit);
+            ChitCardUI actor = new ChitCardUI(xOffset, yOffset, sprite, chit);
             addActor(actor);
             if (currCol < maxWidth) {
                 xOffset += sprite.getWidth() + GUTTER_PX;

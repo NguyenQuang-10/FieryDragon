@@ -8,7 +8,7 @@ public abstract class ChitCard {
     final protected int animalCount;
     protected boolean flipped = false;
     final protected Board board;
-    final protected ChitCardManager manager;
+    final protected ITurnManager manager;
 
     public ChitCard(AnimalType type, int animalCount, Board board, ChitCardManager manager) {
         this.type = type;

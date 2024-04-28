@@ -7,11 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.ChitCards.ChitCard;
 
-public class FDChitCardUI extends Actor {
+public class ChitCardUI extends Actor {
     private Texture sprite;
     private ChitCard chitCard;
 
-    public FDChitCardUI(float x, float y, Texture sprite, ChitCard chitCard){
+    public ChitCardUI(float x, float y, Texture sprite, ChitCard chitCard){
         this.sprite = sprite;
         this.chitCard = chitCard;
 

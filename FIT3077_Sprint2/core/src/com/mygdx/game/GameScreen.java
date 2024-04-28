@@ -6,24 +6,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Board.Board;
-import com.mygdx.game.Board.FDBoard;
 import com.mygdx.game.ChitCards.ChitCardManager;
-import com.mygdx.game.ChitCards.FDChitCardManager;
-import com.mygdx.game.UIComponents.FDBoardUI;
+import com.mygdx.game.UIComponents.BoardUI;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
-import com.mygdx.game.UIComponents.FDChitCardManagerUI;
+import com.mygdx.game.UIComponents.ChitCardManagerUI;
 
 public class GameScreen implements Screen {
     private Stage stage;
-
-    public GameScreen() {
-    }
-
-    Player[] players = {new Player("Player 1"),
-                        new Player("Player 2"),
-                        new Player("Player 3"),
-                        new Player("Player 4")};
+    private FieryDragonGame game;
+    Player[] players;
     AnimalType[] volcanoMap = {
             AnimalType.BABY_DRAGON,
             AnimalType.BAT,
@@ -50,17 +42,38 @@ public class GameScreen implements Screen {
             AnimalType.SPIDER,
             AnimalType.SALAMANDER,
     };
-    Board board = new FDBoard(players, volcanoMap);
-    ChitCardManager chitCardManager = new FDChitCardManager(players);
-    FDBoardUI boardUI = new FDBoardUI(200, 500, 8, 6 , board);
-    FDChitCardManagerUI chitCardManagerUI = new FDChitCardManagerUI(390, 170,4,4, board, chitCardManager);
+    Board board;
+    ChitCardManager chitCardManager;
+    BoardUI boardUI;
+    ChitCardManagerUI chitCardManagerUI;
+
+    public GameScreen(FieryDragonGame game) {
+        this.game = game;
+        if (game.numberOfPlayers == 2) {
+            players = new Player[]{new Player("Player 1"),new Player("Player 2")};
+        } else {
+            players = new Player[]{new Player("Player 1"),
+                    new Player("Player 2"), new Player("Player 3"), new Player("Player 4")};
+        }
+
+        // BAD PRACTICE, THIS IS TEMPORARY ONLY, REMOVE IN NEXT SPRINT ONCE PROPER MENU IS IMPLEMENTED
+        if (game.havePlayerAsObstacle) {
+            players[1].isInCave = false;
+        }
+        board = new Board(players, volcanoMap);
+
+
+        chitCardManager = new ChitCardManager(players);
+        boardUI = new BoardUI(200, 500, 8, 6 , board);
+        chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
+    }
 
     @Override
     public void show() {
         stage = new Stage();
         stage.addActor(boardUI);
         stage.addActor(chitCardManagerUI);
-        stage.setViewport(new StretchViewport(MyGame.WIDTH, MyGame.HEIGHT));
+        stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
     }
 

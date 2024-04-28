@@ -14,7 +14,7 @@ import java.util.Map;
 
 // uses the bridge design pattern with Fiery Dragon board, seperates UI and logic
 // IDK if dependency inversion is a pattern but it is used here as well
-public class FDBoardUI extends Actor {
+public class BoardUI extends Actor {
     final private Map<Integer, Coordinate> positionCoorMap = new HashMap<>();
     final private Map<Cave, Coordinate> caveCoorMap = new HashMap<>();
     Board board;
@@ -26,9 +26,9 @@ public class FDBoardUI extends Actor {
     final private Texture[] playerSprites = new Texture[4];
 
 
-    public FDBoardUI(float x, float y,
-                     int boardWidth, int boardHeight,
-                     Board board) {
+    public BoardUI(float x, float y,
+                   int boardWidth, int boardHeight,
+                   Board board) {
         this.board = board;
         AnimalType[] volcanoMap = this.board.getVolcanoMap();
         int playerCount = this.board.getPlayers().length;
