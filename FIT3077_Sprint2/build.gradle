@@ -81,6 +81,6 @@ project(":desktop") {
 
     launch4j {
         mainClassName = 'com.mygdx.game.DesktopLauncher'
-        outputDir = "${buildDir}"
+        outputDir = "${rootDir}/assets"
     }
 }
