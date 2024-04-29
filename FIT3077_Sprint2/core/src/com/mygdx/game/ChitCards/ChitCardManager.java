@@ -30,9 +30,8 @@ public class ChitCardManager implements ITurnManager {
         }
 
         for (int i = 1; i <= 2; i++) {
-            ChitCard card = new PirateChitCard(i, board, this);
-            cards.add(card);
-            cards.add(card);
+            cards.add(new PirateChitCard(i, board, this));
+            cards.add(new PirateChitCard(i, board, this));
         }
 
         Collections.shuffle(cards);

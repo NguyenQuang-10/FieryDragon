@@ -28,5 +28,6 @@ public abstract class ChitCard {
     }
     public AnimalType getType() {return type; }
     public int getAnimalCount() { return  animalCount; }
+    public boolean getFlippedState() { return this.flipped; }
 }
 
