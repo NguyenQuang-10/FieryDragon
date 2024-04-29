@@ -12,20 +12,34 @@ import com.mygdx.game.Utils.Coordinate;
 import java.util.HashMap;
 import java.util.Map;
 
-// uses the bridge design pattern with Fiery Dragon board, seperates UI and logic
-// IDK if dependency inversion is a pattern but it is used here as well
+// Retrieves state from Board and render to the screen base on those state
+// Render the board as a rectangle
+// View for Board class
 public class BoardUI extends Actor {
+    // map position in the board to the Coordinate on the screen
     final private Map<Integer, Coordinate> positionCoorMap = new HashMap<>();
+    // map cave to their coordinate on the screen
     final private Map<Cave, Coordinate> caveCoorMap = new HashMap<>();
+    // Controller/Board instance
     Board board;
+
+    // height of the rectangular board (how many volcano square)
     final private int boardHeight;
+    // width of the rectangular board (how many volcano square)
     final private int boardWidth;
+
+    // number of pixel in between each volcano sprite
     final private int GUTTER_PX_SIZE = 20;
+
+    // Map volcano type to the corresponding sprite
     final private Map<AnimalType, Texture> volcanoSprites = new HashMap<>();
+    // map cave type to the corresponding sprite
     final private Map<AnimalType, Texture> caveSprites = new HashMap<>();
+
+    // map player instance to their corresponding sprite
     final private Texture[] playerSprites = new Texture[4];
 
-
+    // Constructor
     public BoardUI(float x, float y,
                    int boardWidth, int boardHeight,
                    Board board) {
@@ -33,6 +47,7 @@ public class BoardUI extends Actor {
         AnimalType[] volcanoMap = this.board.getVolcanoMap();
         int playerCount = this.board.getPlayers().length;
 
+        // sanity checks
         if (volcanoMap.length != boardHeight * 2 + boardWidth * 2 - 4) {
             throw new RuntimeException("[Board] Volcano map doesn't match board dimension");
         }
@@ -44,14 +59,18 @@ public class BoardUI extends Actor {
         this.boardHeight = boardHeight;
         this.boardWidth = boardWidth;
 
+        // load sprites
         loadVolcanoSprites();
         loadCaveSprites();
         loadPlayerSprites();
 
+        // set origin to start drawing
         setX(x);
         setY(y);
     }
 
+    // See libGDX documentation
+    // Draw the board to the screen
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -60,12 +79,19 @@ public class BoardUI extends Actor {
         drawPlayers(batch);
     }
 
+    /*
+        Load sprites for the player
+     */
     private void loadPlayerSprites() {
         playerSprites[0] = new Texture(Gdx.files.internal("Players\\playerGreen.png"));
         playerSprites[1] = new Texture(Gdx.files.internal("Players\\playerRed.png"));
         playerSprites[2] = new Texture(Gdx.files.internal("Players\\playerBlue.png"));
         playerSprites[3] = new Texture(Gdx.files.internal("Players\\playerYellow.png"));
     }
+
+    /*
+        Load sprites for each player type
+     */
     private void loadVolcanoSprites() {
         volcanoSprites.put(AnimalType.SALAMANDER, new Texture(Gdx.files.internal("Volcanoes\\salaVol.png")));
         volcanoSprites.put(AnimalType.BABY_DRAGON, new Texture(Gdx.files.internal("Volcanoes\\dragonVol.png")));
@@ -73,6 +99,9 @@ public class BoardUI extends Actor {
         volcanoSprites.put(AnimalType.BAT, new Texture(Gdx.files.internal("Volcanoes\\batVol.png")));
     }
 
+    /*
+        load sprites for each cave type
+     */
     private void loadCaveSprites() {
         caveSprites.put(AnimalType.SALAMANDER, new Texture(Gdx.files.internal("Caves\\salaCave.png")));
         caveSprites.put(AnimalType.BAT, new Texture(Gdx.files.internal("Caves\\batCave.png")));
@@ -80,6 +109,10 @@ public class BoardUI extends Actor {
         caveSprites.put(AnimalType.SPIDER, new Texture(Gdx.files.internal("Caves\\spiderCave.png")));
     }
 
+    /*
+        Draw players in the board on to the screen
+        @param batch - Batch instance using to draw, see libGDX docs
+     */
     private void drawPlayers(Batch batch) {
         float PLAYER_ALPHA = 0.5f;
         Player[] players = board.getPlayers();
@@ -107,6 +140,10 @@ public class BoardUI extends Actor {
         }
     }
 
+    /*
+        draw volcanoes on to the screen
+        @param batch - Batch instance using to draw, see libGDX docs
+     */
     private void drawVolcanoes(Batch batch) {
         AnimalType[] volcanoMap = board.getVolcanoMap();
 
@@ -147,6 +184,10 @@ public class BoardUI extends Actor {
         }
     }
 
+    /*
+        draw caves on to the screen
+        @param batch - Batch instance using to draw, see libGDX docs
+     */
     private void drawCaves(Batch batch) {
         Cave[] caves = board.getCaves();
 

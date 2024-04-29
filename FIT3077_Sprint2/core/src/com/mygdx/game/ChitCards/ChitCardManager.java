@@ -6,16 +6,28 @@ import com.mygdx.game.Board.Player;
 import java.util.ArrayList;
 import java.util.Collections;
 
+// A class that contains a collection of all chit card in the game
+// allowing it to manage turns
 public class ChitCardManager implements ITurnManager {
+    // players in the game
     protected Player[] players;
+
+    // chit cards that are contained in the game
     protected ChitCard[] chitCards;
+
+    // the index of the player whose turn it is in this.players
     int activePlayerIndex; // index of players whose turn belong to
 
+    // Constructor
     public ChitCardManager(Player[] players){
         this.players = players;
         this.activePlayerIndex = 0;
     }
 
+    // Generate 16 chit card that follows the base game rules
+    /*
+        @param board - The board that will be associated with all chit cards
+     */
     public void generateChitCards(Board board) {
         ArrayList<ChitCard> cards = new ArrayList<>();
         AnimalType[] animalTypes =  AnimalType.values();
@@ -39,6 +51,7 @@ public class ChitCardManager implements ITurnManager {
         chitCards = cards.toArray(chitCards);
     }
 
+    // Perform operations to end the turn by resetting all chit cards
     public void endTurn() {
         this.activePlayerIndex = (activePlayerIndex + 1) % this.players.length;
         for (ChitCard chitCard : chitCards) {
@@ -46,8 +59,11 @@ public class ChitCardManager implements ITurnManager {
         }
     }
 
+    // see ITurnManager
     public Player getActivePlayer() {
         return this.players[activePlayerIndex];
     }
+
+    // get the array of every chit card in the game.
     public ChitCard[] getChitCards() { return this.chitCards; }
 }

@@ -8,17 +8,25 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.ChitCards.ChitCard;
 
+// Retrieves state from ChitCard and render to the screen base on those state
+// View for ChitCard class
 public class ChitCardUI extends Actor {
+    // default hidden side of chit card sprite
     private Texture hiddenSprite = new Texture(Gdx.files.internal("Chit\\back.png"));
+    // the sprite of the flipped side of the chitCard
     private Texture flippedSprite;
+    // chit card instance/controller
     private ChitCard chitCard;
 
+    // constructor
     public ChitCardUI(float x, float y, Texture sprite , ChitCard chitCard){
         this.flippedSprite = sprite;
         this.chitCard = chitCard;
 
+        // see libGDX documentation
         setBounds(x, y, hiddenSprite.getWidth(), hiddenSprite.getHeight());
 
+        // see libGDX documentation, listen for user click
         addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -28,6 +36,7 @@ public class ChitCardUI extends Actor {
         });
     }
 
+    // see libGDX documentation, draws the chit card
     @Override
     public void draw(Batch batch, float parentAlpha) {
         if (chitCard.getFlippedState()) {

@@ -11,18 +11,32 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 // Rudementary menu just for this project, won't be used in the next sprint
 public class MenuScreen implements Screen {
+    // Game instance - See libGDX documentation
     FieryDragonGame game;
+
+    // See libGDX documentation
     Stage stage;
+
+    // See libGDX documentation
     BitmapFont font;
+
+    // See libGDX documentation
     SpriteBatch batch;
 
+    // how many time user has input
+    // use to determine what game attribute to configure
     int inputCount = 0;
 
+    // Constructor
     public MenuScreen(FieryDragonGame game) {
         this.game = game;
     }
 
 
+    // See libGDX documentation
+    /*
+        Draw a screen to configure the start of the game (e.g How many players?)
+     */
     @Override
     public void show() {
         stage = new Stage();
@@ -33,6 +47,7 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    // See libGDX documentation
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
@@ -77,26 +92,31 @@ public class MenuScreen implements Screen {
 
     }
 
+    // See libGDX documentation
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(game.WIDTH, game.HEIGHT, true);
     }
 
+    // See libGDX documentation
     @Override
     public void pause() {
 
     }
 
+    // See libGDX documentation
     @Override
     public void resume() {
 
     }
 
+    // See libGDX documentation
     @Override
     public void hide() {
 
     }
 
+    // See libGDX documentation
     @Override
     public void dispose() {
 

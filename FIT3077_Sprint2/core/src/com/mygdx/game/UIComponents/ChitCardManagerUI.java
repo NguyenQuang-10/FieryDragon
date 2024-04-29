@@ -11,13 +11,23 @@ import com.mygdx.game.ChitCards.ChitCardManager;
 
 import java.util.HashMap;
 
+// Retrieves state from ChitCardManager and render to the screen base on those state
+// Orders and render ChitCard(s) into a grid
+// View for ChitCardManager class
 public class ChitCardManagerUI extends Group {
 
+    // Controller: ChitCardManager instance
     final private ChitCardManager manager;
+
+    // max number of chit cards in a row
     final private int maxWidth;
+
+    // max number of rows of chit cards
     final private int maxHeight;
+    // maps ChitCard instance to their corresponding sprite
     final private HashMap<ChitCard, Texture> chitCardSprites = new HashMap<>();
 
+    // Constructor
     public ChitCardManagerUI(float x, float y,
                              int maxWidth, int maxHeight,
                              Board board,
@@ -33,11 +43,14 @@ public class ChitCardManagerUI extends Group {
         initChitCardUI();
     }
 
+    // See libGDX documentation
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
     }
 
+    // Create ChitCardUI views for every ChitCard instance belonging to the associated ChitCardManager
+    // Also order them by setting their coordinates
     private void initChitCardUI() {
         int GUTTER_PX = 5;
         ChitCard[] chitCards = manager.getChitCards();
@@ -66,6 +79,7 @@ public class ChitCardManagerUI extends Group {
 
     }
 
+    // load sprites for chit cards
     private void loadChitCardSprite() {
         ChitCard[] chitCards = manager.getChitCards();
         HashMap<AnimalType, String> filePrefixes = new HashMap<>();
