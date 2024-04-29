@@ -87,7 +87,7 @@ public class Board {
                }
 
                // prevents moving backward pass your cave
-               if (unmappedPlayerPosition < currPlayerCave.position) {
+               if (player.position >= currPlayerCave.position && moves < 0 && unmappedPlayerPosition < currPlayerCave.position) {
                     shouldPerformMove = false;
                }
 
