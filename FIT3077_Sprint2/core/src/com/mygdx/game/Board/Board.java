@@ -57,7 +57,7 @@ public class Board {
                player.isInCave = false;
                newPosition -= 1;
                player.position = newPosition;
-          } else if (player.position < currPlayerCave.position && newPosition == currPlayerCave.position) {
+          } else if (player.position <= currPlayerCave.position && (newPosition) == (currPlayerCave.position + 1)) {
                // if player looped around the board with an exact number of moves, let them in the cave
                // and end the game
 
