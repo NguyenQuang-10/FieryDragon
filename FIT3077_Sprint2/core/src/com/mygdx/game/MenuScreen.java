@@ -3,11 +3,15 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import java.io.Console;
 
 // Rudementary menu just for this project, won't be used in the next sprint
 public class MenuScreen implements Screen {
@@ -19,17 +23,19 @@ public class MenuScreen implements Screen {
 
     // See libGDX documentation
     BitmapFont font;
+    GlyphLayout layout;
 
     // See libGDX documentation
     SpriteBatch batch;
+    OrthographicCamera camera;
 
-    // how many time user has input
-    // use to determine what game attribute to configure
-    int inputCount = 0;
+    boolean readyToStartGame = false;
 
     // Constructor
     public MenuScreen(FieryDragonGame game) {
         this.game = game;
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
     }
 
 
@@ -42,6 +48,7 @@ public class MenuScreen implements Screen {
         stage = new Stage();
         font = new BitmapFont();
         batch = new SpriteBatch();
+        layout  = new GlyphLayout(font, "How many player on board?\nPress 2,3 or 4");
 
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
@@ -51,41 +58,25 @@ public class MenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-        int x = 10;
-        int y = 125;
-        if (inputCount == 0) {
-            batch.begin();
-            font.draw(batch, "How many player on board?\n Press 2,3 or 4\n\nYou are always the Green player ",
-                    x, y);
-            batch.end();
-        } else if (inputCount == 1) {
-            batch.begin();
-            font.draw(batch, "Initialise board with a player standing in volcano?\n (As obstacle to test movement)\n Press Y for Yes, N for No",
-                    x, y);
-            batch.end();
+        batch.begin();
+
+        float drawX = game.WIDTH / 2f - layout.width / 2f;
+        float drawY = game.HEIGHT / 2f + layout.height / 2f;
+        font.draw(batch, layout, drawX, drawY);
+        batch.end();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+            game.numberOfPlayers = 2;
+            readyToStartGame = true;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            game.numberOfPlayers = 3;
+            readyToStartGame = true;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            game.numberOfPlayers = 4;
+            readyToStartGame = true;
         }
 
-
-        if (inputCount == 0){
-            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
-                game.numberOfPlayers = 2;
-                inputCount += 1;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-                game.numberOfPlayers = 3;
-                inputCount += 1;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-                game.numberOfPlayers = 4;
-                inputCount += 1;
-            }
-        } else if (inputCount == 1) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.Y)){
-                game.havePlayerAsObstacle = true;
-                inputCount += 1;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-                game.havePlayerAsObstacle = false;
-                inputCount += 1;
-            }
-        } else if (inputCount > 1) {
+        if (readyToStartGame) {
             game.gameScreen = new GameScreen(game);
             game.setScreen(game.gameScreen);
         }
