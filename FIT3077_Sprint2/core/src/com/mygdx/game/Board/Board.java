@@ -63,6 +63,7 @@ public class Board {
 
                player.isInCave = true;
                player.position = currPlayerCave.position;
+               gameEnded = true;
           } else {
                // perform checks to see if moving to the new position is illegal
                int playerCount = playerCave.size();

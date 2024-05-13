@@ -15,12 +15,16 @@ public class RegularChitCard extends ChitCard{
     // else do nothing
     @Override
     public void handleSelection() {
-        super.handleSelection();
+        if (!flipped) {
+            flipped = true;
+            Player activePlayer = manager.getActivePlayer();
 
-        Player activePlayer = manager.getActivePlayer();
-
-        if (type == board.getPlayerVolcano(activePlayer)) {
-            board.movePlayerBy(activePlayer, animalCount);
+            if (type == board.getPlayerVolcano(activePlayer)) {
+                board.movePlayerBy(activePlayer, animalCount);
+            } else {
+                manager.endTurn();
+            }
         }
+
     }
 }

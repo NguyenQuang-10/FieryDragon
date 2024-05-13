@@ -30,11 +30,7 @@ public abstract class ChitCard {
     }
 
     // behaviour that occurs when a chit card is selected
-    public void handleSelection(){
-        if (!flipped) {
-            flipped = true;
-        }
-    }
+    public abstract void handleSelection();
 
     // reset the chit card for the next turn
     public void resetFlipState() {

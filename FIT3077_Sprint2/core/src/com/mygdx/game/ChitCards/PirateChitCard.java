@@ -13,10 +13,12 @@ public class PirateChitCard extends ChitCard{
     // If selected, move the player back the same number as animalCount
     @Override
     public void handleSelection() {
-        super.handleSelection();
+        if (!flipped) {
+            flipped = true;
+            Player activePlayer = manager.getActivePlayer();
+            board.movePlayerBy(activePlayer, -1 * animalCount);
 
-        Player activePlayer = manager.getActivePlayer();
-        board.movePlayerBy(activePlayer, -1 * animalCount);
-
+            manager.endTurn();
+        }
     }
 }
