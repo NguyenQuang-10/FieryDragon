@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Board.*;
 import com.mygdx.game.ChitCards.AnimalType;
+import com.mygdx.game.ChitCards.ITurnManager;
 import com.mygdx.game.Utils.Coordinate;
 
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import java.util.Map;
 // Retrieves state from Board and render to the screen base on those state
 // Render the board as a rectangle
 // View for Board class
-public class BoardUI extends Actor {
+public class BoardUI extends FieryDragonUI {
     // map position in the board to the Coordinate on the screen
     final private Map<Integer, Coordinate> positionCoorMap = new HashMap<>();
     // map cave to their coordinate on the screen
@@ -38,12 +40,18 @@ public class BoardUI extends Actor {
 
     // map player instance to their corresponding sprite
     final private Texture[] playerSprites = new Texture[4];
+    final private ITurnManager turnManager;
+    final private ShapeRenderer shape;
 
     // Constructor
     public BoardUI(float x, float y,
                    int boardWidth, int boardHeight,
-                   Board board) {
+                   Board board,
+                   ITurnManager turnManager
+    ) {
+        super(turnManager);
         this.board = board;
+        this.turnManager = turnManager;
         AnimalType[] volcanoMap = this.board.getVolcanoMap();
         int playerCount = this.board.getPlayers().length;
 
@@ -63,6 +71,8 @@ public class BoardUI extends Actor {
         loadVolcanoSprites();
         loadCaveSprites();
         loadPlayerSprites();
+
+        this.shape = new ShapeRenderer();
 
         // set origin to start drawing
         setX(x);
@@ -109,35 +119,54 @@ public class BoardUI extends Actor {
         caveSprites.put(AnimalType.SPIDER, new Texture(Gdx.files.internal("Caves\\spiderCave.png")));
     }
 
+    private Coordinate getPlayerScreenCoordinate(Player player) {
+        if (player.isInCave) {
+            Cave playerCave = board.getPlayerCave(player);
+            return caveCoorMap.get(playerCave);
+        } else {
+            return positionCoorMap.get(player.getPosition());
+        }
+    }
+
     /*
         Draw players in the board on to the screen
         @param batch - Batch instance using to draw, see libGDX docs
      */
     private void drawPlayers(Batch batch) {
-        float PLAYER_ALPHA = 0.5f;
+
         Player[] players = board.getPlayers();
         for (int i = 0; i < players.length; i++) {
-            float x;
-            float y;
-
-            if (players[i].isInCave) {
-                Cave playerCave = board.getPlayerCave(players[i]);
-                Coordinate caveCoor = caveCoorMap.get(playerCave);
-
-                x = caveCoor.x;
-                y = caveCoor.y;
-            } else {
-                Coordinate positionCoor = positionCoorMap.get(players[i].getPosition());
-                x = positionCoor.x;
-                y = positionCoor.y;
-            }
+            Coordinate drawCoor = getPlayerScreenCoordinate(players[i]);
 
             Texture sprite = playerSprites[i];
             Color color = getColor();
-            batch.setColor(color.r, color.b, color.g, color.a * PLAYER_ALPHA);
-            batch.draw(sprite, x, y);
+            batch.setColor(color.r, color.b, color.g, color.a * 0.5f);
+            batch.draw(sprite, drawCoor.x, drawCoor.y);
             batch.setColor(color.r, color.b, color.g, color.a);
         }
+
+        batch.end();
+
+        Coordinate hlCoor = getPlayerScreenCoordinate(currentActivePlayer);
+
+        shape.setProjectionMatrix(batch.getProjectionMatrix());
+        shape.setTransformMatrix(batch.getTransformMatrix());
+        shape.translate(0, 0, 0);
+
+        Texture sprite = playerSprites[0];
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.CYAN);
+
+        float lineWidth = 10;
+        float spWidth = sprite.getWidth();
+        float spHeight = sprite.getHeight();
+        shape.rectLine(hlCoor.x, hlCoor.y, hlCoor.x, hlCoor.y + spHeight, lineWidth);
+        shape.rectLine(hlCoor.x + spWidth, hlCoor.y, hlCoor.x + spWidth, hlCoor.y + spHeight, lineWidth);
+        shape.rectLine(hlCoor.x, hlCoor.y, hlCoor.x + spWidth, hlCoor.y, lineWidth);
+        shape.rectLine(hlCoor.x, hlCoor.y + spHeight, hlCoor.x + spWidth, hlCoor.y + spHeight, lineWidth);
+        shape.end();
+
+        batch.begin();
     }
 
     /*

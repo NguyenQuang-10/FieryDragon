@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
         // initialise other attributes
         board = new Board(players, volcanoMap);
         chitCardManager = new ChitCardManager(players);
-        boardUI = new BoardUI(200, 500, 8, 6 , board);
+        boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
     }
 
