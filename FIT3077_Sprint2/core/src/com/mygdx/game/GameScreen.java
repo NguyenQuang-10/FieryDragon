@@ -93,6 +93,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
+        stage.act(delta);
         stage.draw();
     }
 

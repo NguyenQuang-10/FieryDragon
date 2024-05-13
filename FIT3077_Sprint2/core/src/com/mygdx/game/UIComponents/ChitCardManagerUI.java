@@ -60,7 +60,7 @@ public class ChitCardManagerUI extends Group {
         float yOffset = getY();
         for (ChitCard chit : chitCards) {
             Texture sprite = chitCardSprites.get(chit);
-            ChitCardUI actor = new ChitCardUI(xOffset, yOffset, sprite, chit);
+            ChitCardUI actor = new ChitCardUI(xOffset, yOffset, sprite, chit, manager);
             addActor(actor);
             if (currCol < maxWidth) {
                 xOffset += sprite.getWidth() + GUTTER_PX;
