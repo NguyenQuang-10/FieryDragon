@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Board.*;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.ChitCards.ITurnManager;
@@ -42,6 +43,8 @@ public class BoardUI extends FieryDragonUI {
     final private Texture[] playerSprites = new Texture[4];
     final private ITurnManager turnManager;
     final private ShapeRenderer shape;
+    final private BitmapFont font;
+    final private GlyphLayout glyphLayout;
 
     // Constructor
     public BoardUI(float x, float y,
@@ -73,6 +76,8 @@ public class BoardUI extends FieryDragonUI {
         loadPlayerSprites();
 
         this.shape = new ShapeRenderer();
+        this.glyphLayout = new GlyphLayout();
+        this.font = new BitmapFont();
 
         // set origin to start drawing
         setX(x);
@@ -87,6 +92,20 @@ public class BoardUI extends FieryDragonUI {
         drawVolcanoes(batch);
         drawCaves(batch);
         drawPlayers(batch);
+        drawText(batch);
+    }
+
+    private void drawText(Batch batch) {
+        if (board.hasGameEnded()) {
+            glyphLayout.setText(font, String.format("%s Won!!!", currentActivePlayer.getName()));
+        } else {
+            if (isWaitingForTurnEnd()) {
+                glyphLayout.setText(font, "Turn Ended!");
+            } else {
+                glyphLayout.setText(font, String.format("%s's Turn", currentActivePlayer.getName()));
+            }
+        }
+        font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
     }
 
     /*
@@ -248,5 +267,17 @@ public class BoardUI extends FieryDragonUI {
             batch.draw(sprite, x,y);
         }
 
+    }
+
+    @Override
+    public void startTurnChange() {
+        super.startTurnChange();
+        System.out.println("Turn changed");
+    }
+
+    @Override
+    public void endTurnChange() {
+        super.endTurnChange();
+        System.out.println("Ended turn changed");
     }
 }
