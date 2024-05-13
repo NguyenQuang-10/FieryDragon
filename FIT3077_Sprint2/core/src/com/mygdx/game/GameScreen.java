@@ -2,6 +2,10 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -11,6 +15,8 @@ import com.mygdx.game.UIComponents.BoardUI;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
 import com.mygdx.game.UIComponents.ChitCardManagerUI;
+import com.mygdx.game.UIComponents.FieryDragonUI;
+import com.mygdx.game.Utils.Coordinate;
 
 import java.util.ArrayList;
 
@@ -54,10 +60,19 @@ public class GameScreen implements Screen {
     ChitCardManager chitCardManager; // ChitCardManager Controller
     BoardUI boardUI; // Board View
     ChitCardManagerUI chitCardManagerUI; // ChitCardManager View
+    Player activePlayer;
+    static int END_TURN_WAIT_TIME = 2;
+    BitmapFont font;
+    SpriteBatch batch;
+    GlyphLayout glyphLayout;
+    OrthographicCamera camera;
 
     // See libGDX documentation
     public GameScreen(FieryDragonGame game) {
         this.game = game;
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
 
         // Create players objects based on number of player
         ArrayList<Player> p = new ArrayList<>();
@@ -66,17 +81,15 @@ public class GameScreen implements Screen {
         }
         this.players = p.toArray(new Player[game.numberOfPlayers]);
 
-        // Move a player outside of their cave right from the start
-        // BAD PRACTICE, THIS IS TEMPORARY ONLY, REMOVE IN NEXT SPRINT ONCE PROPER MENU IS IMPLEMENTED
-        if (game.havePlayerAsObstacle) {
-            players[1].isInCave = false;
-        }
-
         // initialise other attributes
         board = new Board(players, volcanoMap);
         chitCardManager = new ChitCardManager(players);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
+
+        font = new BitmapFont();
+        batch = new SpriteBatch();
+        glyphLayout = new GlyphLayout();
     }
 
     // See libGDX documentation
@@ -87,11 +100,15 @@ public class GameScreen implements Screen {
         stage.addActor(chitCardManagerUI);
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
+
+        ScreenUtils.clear(0, 0, 0.2f, 1);
     }
 
     // See libGDX documentation
     @Override
     public void render(float delta) {
+//        System.out.println(board.hasGameEnded());
+        camera.update();
         ScreenUtils.clear(0, 0, 0.2f, 1);
         stage.act(delta);
         stage.draw();
