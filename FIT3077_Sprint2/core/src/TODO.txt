@@ -1,0 +1,11 @@
+Refactor so that FieryDragon Asset is supplied, not directly invoked - THink of a better way to supply asset
+- abolish the singleton
+- class manages their own assets
+
+Implement ChitCardManager and ChitCard UI actor
+
+Some board functionality I haven't done:
+- Player can't be on the same square
+
+Organize the main launcher/driver class
+Restructure the thing
