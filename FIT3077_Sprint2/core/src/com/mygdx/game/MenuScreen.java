@@ -45,27 +45,36 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void show() {
+        // Initialize stage, font, batch, and layout
         stage = new Stage();
         font = new BitmapFont();
         batch = new SpriteBatch();
-        layout  = new GlyphLayout(font, "How many player on board?\nPress 2,3 or 4");
+        layout = new GlyphLayout(font, "How many players on board?\nPress 2,3, or 4");
 
+        // Set the viewport for the stage
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
+
+        // Set the input processor to the stage
         Gdx.input.setInputProcessor(stage);
     }
 
-    // See libGDX documentation
+    // Render method called every frame
     @Override
     public void render(float delta) {
+        // Clear the screen with a dark blue color
         ScreenUtils.clear(0, 0, 0.2f, 1);
         batch.begin();
 
+        // Calculate the position to draw the text centered on the screen
         float drawX = game.WIDTH / 2f - layout.width / 2f;
         float drawY = game.HEIGHT / 2f + layout.height / 2f;
+
+        // Draw the text on the screen
         font.draw(batch, layout, drawX, drawY);
         batch.end();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)){
+        // Check for key presses to determine the number of players
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
             game.numberOfPlayers = 2;
             readyToStartGame = true;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
@@ -76,40 +85,42 @@ public class MenuScreen implements Screen {
             readyToStartGame = true;
         }
 
+        // If ready to start the game, create a new GameScreen and set it as the active screen
         if (readyToStartGame) {
             game.gameScreen = new GameScreen(game);
             game.setScreen(game.gameScreen);
         }
-
     }
+
 
     // See libGDX documentation
     @Override
     public void resize(int width, int height) {
+        // Update the viewport of the stage when the window is resized
         stage.getViewport().update(game.WIDTH, game.HEIGHT, true);
     }
 
-    // See libGDX documentation
+    // Called when the game is paused
     @Override
     public void pause() {
-
+        // Implementation may include pausing game logic or saving game state
     }
 
-    // See libGDX documentation
+    // Called when the game is resumed from a paused state
     @Override
     public void resume() {
-
+        // Implementation may include resuming game logic or restoring game state
     }
 
-    // See libGDX documentation
+    // Called when this screen is no longer the current screen
     @Override
     public void hide() {
-
+        // Implementation may include stopping any ongoing actions or animations
     }
 
-    // See libGDX documentation
+    // Called when this screen should release all resources
     @Override
     public void dispose() {
-
+        // Implementation may include disposing of textures, fonts, or other resources
     }
 }

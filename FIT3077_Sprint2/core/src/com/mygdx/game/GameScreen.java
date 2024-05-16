@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     OrthographicCamera camera;
 
     // See libGDX documentation
+    // Constructor for GameScreen class, initializes the game objects and UI elements
     public GameScreen(FieryDragonGame game) {
         this.game = game;
 
@@ -86,41 +87,48 @@ public class GameScreen implements Screen {
     }
 
     // See libGDX documentation
+    // Render method called every frame
     @Override
     public void render(float delta) {
 //        System.out.println(board.hasGameEnded());
         camera.update();
+        // Clear the screen with a dark blue color
         ScreenUtils.clear(0, 0, 0.2f, 1);
         stage.act(delta);
         stage.draw();
     }
 
     // See libGDX documentation
+    // Called when the window is resized
     @Override
     public void resize(int width, int height) {
-
+        // Update the viewport of the stage
         stage.getViewport().update(width, height, true);
     }
 
     // See libGDX documentation
+    // Called when the game is paused
     @Override
     public void pause() {
 
     }
 
     // See libGDX documentation
+    // Called when the game is resumed from a paused state
     @Override
     public void resume() {
 
     }
 
     // See libGDX documentation
+    // Called when this screen is no longer the current screen
     @Override
     public void hide() {
 
     }
 
     // See libGDX documentation
+    // Called when this screen should release all resources
     @Override
     public void dispose() {
 
