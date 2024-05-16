@@ -20,7 +20,10 @@ public class RegularChitCard extends ChitCard{
             Player activePlayer = manager.getActivePlayer();
 
             if (type == board.getPlayerVolcano(activePlayer)) {
-                board.movePlayerBy(activePlayer, animalCount);
+                boolean moveSuccessful = board.movePlayerBy(activePlayer, animalCount);
+                if (!moveSuccessful) {
+                    manager.endTurn();
+                }
             } else {
                 manager.endTurn();
             }

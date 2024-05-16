@@ -15,53 +15,23 @@ import com.mygdx.game.UIComponents.BoardUI;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
 import com.mygdx.game.UIComponents.ChitCardManagerUI;
-import com.mygdx.game.UIComponents.FieryDragonUI;
-import com.mygdx.game.Utils.Coordinate;
 
-import java.util.ArrayList;
+import java.util.*;
 
 // Screen that display the actual game
 public class GameScreen implements Screen {
+    static final int MAP_LENGTH = 24;
+
     // See libGDX documentation
     private Stage stage;
     // That Game instance, see libGDX docs
-    private FieryDragonGame game;
+    private final FieryDragonGame game;
     // players in the game
     Player[] players;
-
-    // topology of the Board
-    AnimalType[] volcanoMap = {
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-            AnimalType.BABY_DRAGON,
-            AnimalType.BAT,
-            AnimalType.SPIDER,
-            AnimalType.SALAMANDER,
-    };
     Board board; // Board Controller
     ChitCardManager chitCardManager; // ChitCardManager Controller
     BoardUI boardUI; // Board View
     ChitCardManagerUI chitCardManagerUI; // ChitCardManager View
-    Player activePlayer;
-    static int END_TURN_WAIT_TIME = 2;
     BitmapFont font;
     SpriteBatch batch;
     GlyphLayout glyphLayout;
@@ -81,8 +51,19 @@ public class GameScreen implements Screen {
         }
         this.players = p.toArray(new Player[game.numberOfPlayers]);
 
+        // randomize volcano placement
+        ArrayList<AnimalType> volcanoMap = new ArrayList<>();
+        while (volcanoMap.size() < MAP_LENGTH) {
+            // shuffle a list of all distinct type allowed on the board, this make sure all types are used equally
+            AnimalType[] allowedVolcanoTypes = {AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.SPIDER};
+            List<AnimalType> types = Arrays.asList(allowedVolcanoTypes);
+            Collections.shuffle(types);
+
+            volcanoMap.addAll(types);
+        }
+
         // initialise other attributes
-        board = new Board(players, volcanoMap);
+        board = new Board(players, volcanoMap.toArray(new AnimalType[0]));
         chitCardManager = new ChitCardManager(players);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);

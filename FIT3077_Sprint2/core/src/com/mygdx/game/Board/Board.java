@@ -13,7 +13,14 @@ import java.util.*;
 // - initiating and keeping track of board arrangement
 public class Board {
      // map linking player to the cave that belongs to them
-     Map<Player, Cave>playerCave = new LinkedHashMap<>();
+     Map<Player, Cave> playerCave = new LinkedHashMap<>();
+
+     // map linking player to the cave that belongs to them
+     Map<Player, Integer> playerDistanceFromCave = new HashMap<>();
+
+     // map linking player to the cave that belongs to them
+     Map<Player, Integer> playerPositions = new HashMap<>();
+
      // an array of AnimalType that respresent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
      AnimalType[] volcanoMap;
@@ -37,13 +44,19 @@ public class Board {
      /*
        @param player - the player to move
        @param moves - number of moves to move player by, from their current position
+       Returns true if player moved, false otherwise
      */
-     public void movePlayerBy(Player player, int moves) {
+     public boolean movePlayerBy(Player player, int moves) {
+          // how many moves the player have made/ how far away they are from the cave if the move is made
+          int newDistanceFromCave = this.playerDistanceFromCave.get(player) + moves;
+          System.out.println(newDistanceFromCave);
 
+          // player position on the board
+          int playerPosition = this.playerPositions.get(player);
 
           // new position on the board, ensures that players loops around the board
-          // (i.e Position after 24 is 0)
-          int newPosition = (player.position + moves) % this.length;
+          // (i.e. Position after 24 is 0)
+          int newPosition = (playerPosition + moves) % this.length;
 
           if (newPosition < 0) {
                newPosition = this.length - (Math.abs(newPosition) % this.length );
@@ -56,14 +69,19 @@ public class Board {
           if (player.isInCave && moves > 0) {
                player.isInCave = false;
                newPosition -= 1;
-               player.position = newPosition;
-          } else if (player.position <= currPlayerCave.position && (newPosition) == (currPlayerCave.position + 1)) {
+               this.playerPositions.put(player, newPosition);
+               this.playerDistanceFromCave.put(player, newDistanceFromCave);
+
+               return true;
+          } else if (newDistanceFromCave == this.volcanoMap.length) {
                // if player looped around the board with an exact number of moves, let them in the cave
                // and end the game
 
                player.isInCave = true;
-               player.position = currPlayerCave.position;
+               this.playerPositions.put(player, currPlayerCave.position);
                gameEnded = true;
+               this.playerDistanceFromCave.put(player, newDistanceFromCave);
+               return true;
           } else {
                // perform checks to see if moving to the new position is illegal
                int playerCount = playerCave.size();
@@ -74,7 +92,7 @@ public class Board {
                // check to see if there is any player block the position this player is moving to
                // prevent move moment if there are
                for (Player p: players) {
-                    if (p != player && !p.isInCave && p.position == newPosition) {
+                    if (p != player && !p.isInCave && this.playerPositions.get(p) == newPosition) {
                          shouldPerformMove = false;
                          break;
                     }
@@ -82,21 +100,21 @@ public class Board {
 
                // prevent moving if you looped around the board don't have the exact move
                // needed to enter the cave
-               int unmappedPlayerPosition = player.position + moves;
-               if (player.position < currPlayerCave.position &&  unmappedPlayerPosition > currPlayerCave.position) {
-                    shouldPerformMove = false;
-               }
-
-               // prevents moving backward pass your cave
-               if (player.position >= currPlayerCave.position && moves < 0 && unmappedPlayerPosition < currPlayerCave.position) {
+               // and prevent player from moving too far back beyond where they exit the cave (i.e. the player cannot
+               // move backward into their cave or beyond it)
+               if (newDistanceFromCave < 1 || newDistanceFromCave > this.volcanoMap.length) {
                     shouldPerformMove = false;
                }
 
                // if not illegal, perform move
                if (shouldPerformMove) {
-                    player.position = newPosition;
+                    playerPositions.put(player, newPosition);
+                    this.playerDistanceFromCave.put(player, newDistanceFromCave);
                }
+
+               return shouldPerformMove;
           }
+
      }
 
      // Get the type of the volcano/cave a player is standing on
@@ -107,7 +125,7 @@ public class Board {
           if (player.isInCave) {
                return playerCave.get(player).type;
           } else {
-               return volcanoMap[player.position];
+               return volcanoMap[playerPositions.get(player)];
           }
      }
 
@@ -148,7 +166,8 @@ public class Board {
 
                AnimalType randomAniType = types.get(i % playerCount);
                playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
-               newPlayers[i].position = startLocation;
+               this.playerPositions.put(newPlayers[i], startLocation);
+               this.playerDistanceFromCave.put(newPlayers[i], 0);
           }
      }
 
@@ -168,6 +187,11 @@ public class Board {
      public Player[] getPlayers() {
           int playerCount = playerCave.size();
           return playerCave.keySet().toArray(new Player[playerCount]);
+     }
+
+     // return the player's position on the board
+     public int getPlayerPosition(Player player) {
+          return this.playerPositions.get(player);
      }
 
      // return true if game has a winner and ended, false otherwise

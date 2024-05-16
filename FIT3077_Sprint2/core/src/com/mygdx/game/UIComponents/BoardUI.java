@@ -41,7 +41,6 @@ public class BoardUI extends FieryDragonUI {
 
     // map player instance to their corresponding sprite
     final private Texture[] playerSprites = new Texture[4];
-    final private ITurnManager turnManager;
     final private ShapeRenderer shape;
     final private BitmapFont font;
     final private GlyphLayout glyphLayout;
@@ -143,7 +142,7 @@ public class BoardUI extends FieryDragonUI {
             Cave playerCave = board.getPlayerCave(player);
             return caveCoorMap.get(playerCave);
         } else {
-            return positionCoorMap.get(player.getPosition());
+            return positionCoorMap.get(board.getPlayerPosition(player));
         }
     }
 
@@ -245,8 +244,7 @@ public class BoardUI extends FieryDragonUI {
         // leftLim is just whatever that haven't been iterated across
 
 
-        for (int i = 0; i < caves.length; i++) {
-            Cave currCave = caves[i];
+        for (Cave currCave : caves) {
             Coordinate coor = positionCoorMap.get(currCave.position);
             Texture sprite = caveSprites.get(currCave.type);
 
@@ -255,7 +253,7 @@ public class BoardUI extends FieryDragonUI {
 
             if (currCave.position <= bottomLim) {
                 y -= sprite.getHeight() + GUTTER_PX_SIZE;
-            } else if (currCave.position <= rightLim ) {
+            } else if (currCave.position <= rightLim) {
                 x += sprite.getWidth() + GUTTER_PX_SIZE;
             } else if (currCave.position <= topLim) {
                 y += sprite.getHeight() + GUTTER_PX_SIZE;
@@ -263,8 +261,8 @@ public class BoardUI extends FieryDragonUI {
                 x -= sprite.getWidth() + GUTTER_PX_SIZE;
             }
 
-            caveCoorMap.put(currCave, new Coordinate(x,y));
-            batch.draw(sprite, x,y);
+            caveCoorMap.put(currCave, new Coordinate(x, y));
+            batch.draw(sprite, x, y);
         }
 
     }
