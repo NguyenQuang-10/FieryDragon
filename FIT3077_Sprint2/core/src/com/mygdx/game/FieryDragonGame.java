@@ -23,14 +23,18 @@ public class FieryDragonGame extends Game {
 	// See libGDX documentation
 	@Override
 	public void create () {
+		// Create the menu screen and set it as the initial screen
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
 	}
 
 	// See libGDX documentation
+	// Called when the application should release all resources
 	@Override
 	public void dispose () {
+		// Dispose of resources used by the menu screen
 		menuScreen.dispose();
+		// Dispose of resources used by the game screen if it exists
 		if (gameScreen != null) {
 			gameScreen.dispose();
 		}

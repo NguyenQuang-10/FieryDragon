@@ -103,24 +103,20 @@ public class MenuScreen implements Screen {
     // Called when the game is paused
     @Override
     public void pause() {
-        // Implementation may include pausing game logic or saving game state
     }
 
     // Called when the game is resumed from a paused state
     @Override
     public void resume() {
-        // Implementation may include resuming game logic or restoring game state
     }
 
     // Called when this screen is no longer the current screen
     @Override
     public void hide() {
-        // Implementation may include stopping any ongoing actions or animations
     }
 
     // Called when this screen should release all resources
     @Override
     public void dispose() {
-        // Implementation may include disposing of textures, fonts, or other resources
     }
 }
