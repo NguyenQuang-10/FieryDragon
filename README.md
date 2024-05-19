@@ -1,4 +1,4 @@
-# Sprint 2 by Nhat Quang Nguyen (3278 1954) - Installation Guide
+# Sprint 3 by Team 377 at Clayton - Installation Guide
 
 You can obtain the source code for this project from: https://git.infotech.monash.edu/FIT3077/fit3077-s1-2024/CL_Monday06pm_Team377
 
