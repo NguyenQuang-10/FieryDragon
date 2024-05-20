@@ -67,12 +67,29 @@ public class Board {
 
           // if the player is in their cave, move them out
           if (player.isInCave && moves > 0) {
-               player.isInCave = false;
-               newPosition -= 1;
-               this.playerPositions.put(player, newPosition);
-               this.playerDistanceFromCave.put(player, newDistanceFromCave);
+               // perform checks to see if moving to the new position is illegal
+               int playerCount = playerCave.size();
+               Player[] players = playerCave.keySet().toArray(new Player[playerCount]);
 
-               return true;
+               boolean shouldPerformMove = true;
+
+               // check to see if there is any player block the position this player is moving to
+               // prevent move moment if there are
+               for (Player p: players) {
+                    if (p != player && !p.isInCave && this.playerPositions.get(p) == newPosition - 1) {
+                         shouldPerformMove = false;
+                         break;
+                    }
+               }
+
+               if (shouldPerformMove) {
+                    player.isInCave = false;
+                    newPosition -= 1;
+                    this.playerPositions.put(player, newPosition);
+                    this.playerDistanceFromCave.put(player, newDistanceFromCave);
+               }
+
+               return shouldPerformMove;
           } else if (newDistanceFromCave == this.volcanoMap.length + 2) {
                // if player looped around the board with an exact number of moves, let them in the cave
                // and end the game
