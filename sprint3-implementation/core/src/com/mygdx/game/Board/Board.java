@@ -49,7 +49,7 @@ public class Board {
      public boolean movePlayerBy(Player player, int moves) {
           // how many moves the player have made/ how far away they are from the cave if the move is made
           int newDistanceFromCave = this.playerDistanceFromCave.get(player) + moves;
-          System.out.println(newDistanceFromCave);
+//          System.out.println(newDistanceFromCave);
 
           // player position on the board
           int playerPosition = this.playerPositions.get(player);
@@ -73,7 +73,7 @@ public class Board {
                this.playerDistanceFromCave.put(player, newDistanceFromCave);
 
                return true;
-          } else if (newDistanceFromCave == this.volcanoMap.length) {
+          } else if (newDistanceFromCave == this.volcanoMap.length + 2) {
                // if player looped around the board with an exact number of moves, let them in the cave
                // and end the game
 
@@ -102,7 +102,7 @@ public class Board {
                // needed to enter the cave
                // and prevent player from moving too far back beyond where they exit the cave (i.e. the player cannot
                // move backward into their cave or beyond it)
-               if (newDistanceFromCave < 1 || newDistanceFromCave > this.volcanoMap.length) {
+               if (newDistanceFromCave < 1 || newDistanceFromCave > this.volcanoMap.length + 2) {
                     shouldPerformMove = false;
                }
 
