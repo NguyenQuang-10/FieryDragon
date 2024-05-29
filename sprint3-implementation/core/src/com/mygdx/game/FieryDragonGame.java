@@ -1,14 +1,20 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.mygdx.game.screen.GameScreen;
+import com.mygdx.game.screen.BeforeGameScreen;
+import com.mygdx.game.screen.PauseScreen;
+import com.mygdx.game.screen.StartScreen;
 
 // Driver class for the Game
 public class FieryDragonGame extends Game {
 	// The menu screen to configure the game
-	public MenuScreen menuScreen;
+	public BeforeGameScreen beforeGameScreen;
 
 	// The screen that will display the actual game
 	public GameScreen gameScreen;
+	public PauseScreen pauseScreen;
+	public StartScreen startScreen;
 
 	// resolution to run the game at
 	public final int WIDTH = 1920;
@@ -24,8 +30,8 @@ public class FieryDragonGame extends Game {
 	@Override
 	public void create () {
 		// Create the menu screen and set it as the initial screen
-		menuScreen = new MenuScreen(this);
-		setScreen(menuScreen);
+		startScreen = new StartScreen(this);
+		setScreen(startScreen);
 	}
 
 	// See libGDX documentation
@@ -33,10 +39,16 @@ public class FieryDragonGame extends Game {
 	@Override
 	public void dispose () {
 		// Dispose of resources used by the menu screen
-		menuScreen.dispose();
+		startScreen.dispose();
+		if (beforeGameScreen != null) {
+			beforeGameScreen.dispose();
+		}
 		// Dispose of resources used by the game screen if it exists
 		if (gameScreen != null) {
 			gameScreen.dispose();
+		}
+		if (pauseScreen != null) {
+			pauseScreen.dispose();
 		}
 	}
 }

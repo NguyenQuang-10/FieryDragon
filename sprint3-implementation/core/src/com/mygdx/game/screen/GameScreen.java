@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Board.Board;
 import com.mygdx.game.ChitCards.ChitCardManager;
+import com.mygdx.game.FieryDragonGame;
 import com.mygdx.game.UIComponents.BoardUI;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
@@ -36,6 +38,7 @@ public class GameScreen implements Screen {
     SpriteBatch batch;
     GlyphLayout glyphLayout;
     OrthographicCamera camera;
+    GlyphLayout pauseText;
 
     // See libGDX documentation
     // Constructor for GameScreen class, initializes the game objects and UI elements
@@ -76,7 +79,6 @@ public class GameScreen implements Screen {
         chitCardManager = new ChitCardManager(players, "custom", animalTypeMap);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
-
         font = new BitmapFont();
         batch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
@@ -90,6 +92,7 @@ public class GameScreen implements Screen {
         stage.addActor(chitCardManagerUI);
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
+        pauseText = new GlyphLayout(font, "Press 0 to pause the game ");
 
         ScreenUtils.clear(0, 0, 0.2f, 1);
     }
@@ -103,7 +106,18 @@ public class GameScreen implements Screen {
         // Clear the screen with a dark blue color
         ScreenUtils.clear(0, 0, 0.2f, 1);
         stage.act(delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+            this.pause();
+        }
         stage.draw();
+        batch.begin();
+        // Calculate the position to draw the text centered o
+        float drawX = 100;
+        float drawY = game.HEIGHT / 2f + pauseText.height / 2f;
+        // Draw the text on the screen
+        font.draw(batch, pauseText, drawX, drawY);
+        batch.end();
+
     }
 
     // See libGDX documentation
@@ -118,7 +132,8 @@ public class GameScreen implements Screen {
     // Called when the game is paused
     @Override
     public void pause() {
-
+        game.pauseScreen = new PauseScreen(game,this);
+        game.setScreen(game.pauseScreen);
     }
 
     // See libGDX documentation
@@ -139,6 +154,7 @@ public class GameScreen implements Screen {
     // Called when this screen should release all resources
     @Override
     public void dispose() {
-
+        font.dispose();
+        stage.dispose();
     }
 }

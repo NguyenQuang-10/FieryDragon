@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,11 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-
-import java.io.Console;
+import com.mygdx.game.FieryDragonGame;
 
 // Rudementary menu just for this project, won't be used in the next sprint
-public class MenuScreen implements Screen {
+public class BeforeGameScreen implements Screen {
     // Game instance - See libGDX documentation
     FieryDragonGame game;
 
@@ -32,7 +31,7 @@ public class MenuScreen implements Screen {
     boolean readyToStartGame = false;
 
     // Constructor
-    public MenuScreen(FieryDragonGame game) {
+    public BeforeGameScreen(FieryDragonGame game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
@@ -118,5 +117,8 @@ public class MenuScreen implements Screen {
     // Called when this screen should release all resources
     @Override
     public void dispose() {
+        stage.dispose();
+        font.dispose();
+        batch.dispose();
     }
 }
