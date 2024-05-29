@@ -1,0 +1,56 @@
+---
+boardDefault: ["BABY_DRAGON","BAT","SPIDER",
+               "SPIDER","BAT","SALAMANDER",
+               "SALAMANDER","SPIDER","BAT",
+               "BABY_DRAGON","SALAMANDER","BAT",
+               "SPIDER","SALAMANDER","BABY_DRAGON",
+               "BAT","BABY_DRAGON","SALAMANDER",
+               "BAT","SPIDER","BABY_DRAGON",
+               "SALAMANDER","BABY_DRAGON","SPIDER" ]
+
+boardCustom: []
+
+player: [
+  1,
+  7,
+  13,
+  19
+]
+
+
+chitCardType:
+  - "BABY_DRAGON"
+  - "BABY_DRAGON"
+  - "BABY_DRAGON"
+  - "BAT"
+  - "BAT"
+  - "BAT"
+  - "SPIDER"
+  - "SPIDER"
+  - "SPIDER"
+  - "SALAMANDER"
+  - "SALAMANDER"
+  - "SALAMANDER"
+  - "PIRATE_DRAGON"
+  - "PIRATE_DRAGON"
+  - "PIRATE_DRAGON"
+  - "PIRATE_DRAGON"
+
+chitCardNumber:
+  - 1
+  - 2
+  - 3
+  - 1
+  - 2
+  - 3
+  - 1
+  - 2
+  - 3
+  - 1
+  - 2
+  - 3
+  - 1
+  - 2
+  - 1
+  - 2
+
