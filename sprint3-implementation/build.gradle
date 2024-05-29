@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'org.docstr:gwt-gradle-plugin:1.1.29'
         classpath 'org.gretty:gretty:3.1.0'
-        classpath 'org.yaml:snakeyaml:2.2'
+        classpath 'org.yaml:snakeyaml:2.1'
 
     }
 }
@@ -79,6 +79,7 @@ project(":core") {
 
 
     dependencies {
+        implementation 'org.yaml:snakeyaml:2.1'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
