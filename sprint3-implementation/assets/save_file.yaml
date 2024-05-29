@@ -11,12 +11,11 @@ boardDefault: ["BABY_DRAGON","BAT","SPIDER",
 boardCustom: []
 
 player: [
-  1,
-  7,
-  13,
-  19
+  5,
+  11,
+  17,
+  23
 ]
-
 
 chitCardType:
   - "BABY_DRAGON"
