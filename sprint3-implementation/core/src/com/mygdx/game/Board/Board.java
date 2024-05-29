@@ -1,14 +1,15 @@
 package com.mygdx.game.Board;
 
 
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ChitCards.AnimalType;
-import org.yaml.snakeyaml.Yaml;
-import java.io.InputStream;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import java.util.*;
-
+import org.yaml.snakeyaml.Yaml;
+import java.io.InputStream;
 
 // Class managing state relating to the FieryDragon Board
 // Responsbility includes
@@ -25,7 +26,7 @@ public class Board {
      // map linking player to the cave that belongs to them
      Map<Player, Integer> playerPositions = new HashMap<>();
 
-     // an array of AnimalType that respresent type of volcano squares on the board
+     // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
      AnimalType[] volcanoMap;
 
@@ -45,9 +46,41 @@ public class Board {
      }
 
      public Board(Player[] players, String mode) {
-          if (mode.equals("Default")) {
-               AnimalType[] defaultBoardConfig = {AnimalType.BABY_DRAGON, AnimalType.BAT, AnimalType.SPIDER, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SALAMANDER, AnimalType.SPIDER, AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SPIDER, AnimalType.SALAMANDER, AnimalType.BABY_DRAGON, AnimalType., AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType., AnimalType., AnimalType., AnimalType., AnimalType., AnimalType., };
+          Yaml yaml = new Yaml();
+          List<String> boardData = new ArrayList<>();
+          try {
+               InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
+               Map<String, List> yamlData = yaml.load(inputStream);
+               inputStream.close();
+               if (mode.equals("default")) {
+                    boardData = (List<String>) yamlData.get("boardDefault");
+               } else {
+                    boardData = (List<String>) yamlData.get("boardCustom");
+               }
+
+          } catch(Exception e) {
+               System.out.print(e.getMessage());
           }
+
+          Map<String, AnimalType> animalTypeMap = new HashMap<>();
+          for (AnimalType animalType : AnimalType.values()) {
+               animalTypeMap.put(animalType.name(), animalType);
+          }
+
+          AnimalType[] volcanoPosition = new AnimalType[boardData.size()];
+          for (int i = 0; i < boardData.size() / 3; i++) {
+               AnimalType animalType1 = animalTypeMap.get(boardData.get(i * 3));
+               AnimalType animalType2 = animalTypeMap.get(boardData.get(i * 3 + 1));
+               AnimalType animalType3 = animalTypeMap.get(boardData.get(i * 3 + 2));
+               VolcanoCard volcanoCard = new VolcanoCard(animalType1, animalType2, animalType3);
+
+               Array<AnimalType> animalTypes = volcanoCard.getTypes();
+               volcanoPosition[i*3] = animalTypes.get(0);
+               volcanoPosition[i*3+1] = animalTypes.get(1);
+               volcanoPosition[i*3+2] = animalTypes.get(2);
+          }
+          setVolcanoMap(volcanoPosition);
+          setPlayers(players);
      }
 
      /*
