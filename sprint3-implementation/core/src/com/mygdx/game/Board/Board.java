@@ -2,6 +2,10 @@ package com.mygdx.game.Board;
 
 
 import com.mygdx.game.ChitCards.AnimalType;
+import org.yaml.snakeyaml.Yaml;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.util.*;
 
@@ -36,9 +40,14 @@ public class Board {
        @param volcanoMap - array of AnimalType that describe the board topology
      */
      public Board(Player[] players, AnimalType[] volcanoMap){
-
           setVolcanoMap(volcanoMap);
           setPlayers(players);
+     }
+
+     public Board(Player[] players, String mode) {
+          if (mode.equals("Default")) {
+               AnimalType[] defaultBoardConfig = {AnimalType.BABY_DRAGON, AnimalType.BAT, AnimalType.SPIDER, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SALAMANDER, AnimalType.SPIDER, AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SPIDER, AnimalType.SALAMANDER, AnimalType.BABY_DRAGON, AnimalType., AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType., AnimalType., AnimalType., AnimalType., AnimalType., AnimalType., };
+          }
      }
 
      /*
