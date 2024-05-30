@@ -1,4 +1,6 @@
 ---
+saved: false
+
 boardDefault: ["BABY_DRAGON","BAT","SPIDER",
                "SPIDER","BAT","SALAMANDER",
                "SALAMANDER","SPIDER","BAT",
@@ -10,12 +12,7 @@ boardDefault: ["BABY_DRAGON","BAT","SPIDER",
 
 boardCustom: []
 
-player: [
-  5,
-  11,
-  17,
-  23
-]
+playerPositionCustom: []
 
 chitCardType:
   - "BABY_DRAGON"
@@ -36,20 +33,20 @@ chitCardType:
   - "PIRATE_DRAGON"
 
 chitCardNumber:
-  - 1
-  - 2
-  - 3
-  - 1
-  - 2
-  - 3
-  - 1
-  - 2
-  - 3
-  - 1
-  - 2
-  - 3
-  - 1
-  - 2
-  - 1
-  - 2
+  - "1"
+  - "2"
+  - "3"
+  - "1"
+  - "2"
+  - "3"
+  - "1"
+  - "2"
+  - "3"
+  - "1"
+  - "2"
+  - "3"
+  - "1"
+  - "2"
+  - "1"
+  - "2"
 
