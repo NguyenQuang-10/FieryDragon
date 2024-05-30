@@ -11,6 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
+import org.yaml.snakeyaml.Yaml;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+
+
 
 public class StartScreen implements Screen {
     // Game instance - See libGDX documentation
@@ -48,7 +56,7 @@ public class StartScreen implements Screen {
         stage = new Stage();
         font = new BitmapFont();
         batch = new SpriteBatch();
-        layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 2 to open load game \n Press 3 to quit game");
+
 
         // Set the viewport for the stage
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
@@ -60,6 +68,21 @@ public class StartScreen implements Screen {
     // Render method called every frame
     @Override
     public void render(float delta) {
+        Yaml yaml = new Yaml();
+        boolean checkSaved = false;
+        try {
+            InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
+            Map<String, Boolean> yamlData = yaml.load(inputStream);
+            inputStream.close();
+            checkSaved = yamlData.get("saved");
+        } catch(Exception e) {
+            System.out.print(e.getMessage());
+        }
+        layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 3 to quit game");
+        if (checkSaved) {
+            layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 2 to open load game \n Press 3 to quit game");
+        }
+
         // Clear the screen with a dark blue color
         ScreenUtils.clear(0, 0, 0.2f, 1);
         batch.begin();
@@ -72,10 +95,12 @@ public class StartScreen implements Screen {
         font.draw(batch, layout, drawX, drawY);
         batch.end();
 
+
+
         // Check for key presses to determine the number of players
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             optionGame = 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
             optionGame = 2;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             optionGame = 3;
