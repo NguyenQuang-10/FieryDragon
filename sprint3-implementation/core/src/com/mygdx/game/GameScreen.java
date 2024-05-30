@@ -63,13 +63,17 @@ public class GameScreen implements Screen {
             volcanoMap.addAll(types);
         }
 
+        // generate AnimalType array
+        Map<String, AnimalType> animalTypeMap = new HashMap<>();
+        for (AnimalType animalType : AnimalType.values()) {
+            animalTypeMap.put(animalType.name(), animalType);
+        }
+
         // initialise other attributes
-//        board = new Board(players, volcanoMap.toArray(new AnimalType[0]));
-
-        board = new Board(players, "default");
+        board = new Board(players, "default", animalTypeMap);
 
 
-        chitCardManager = new ChitCardManager(players);
+        chitCardManager = new ChitCardManager(players, "custom", animalTypeMap);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
 
