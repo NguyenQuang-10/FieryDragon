@@ -1,5 +1,6 @@
 ---
 saved: false
+load_option: "default"
 
 boardDefault: ["BABY_DRAGON","BAT","SPIDER",
                "SPIDER","BAT","SALAMANDER",
