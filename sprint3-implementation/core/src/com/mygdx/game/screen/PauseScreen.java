@@ -49,7 +49,7 @@ public class PauseScreen implements Screen {
         stage = new Stage();
         font = new BitmapFont();
         batch = new SpriteBatch();
-        layout = new GlyphLayout(font, " Option\n Press 1 to continue\n Press 2 to restart \n Press 3 to save game \n Press 4 to quit game");
+        layout = new GlyphLayout(font, " Option\n Press 1 to continue\n Press 2 to restart \n Press 3 to save game \n Press 4 to quit game \n Press 5 to quit and save");
 
         // Set the viewport for the stage
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
@@ -84,7 +84,9 @@ public class PauseScreen implements Screen {
         else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             optionGame = 4;
         }
-
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            optionGame = 5;
+        }
         if (optionGame == 1) {
             this.resume();
         }
@@ -98,8 +100,10 @@ public class PauseScreen implements Screen {
         if (optionGame == 4) {
             Gdx.app.exit();
         }
-
-    }
+        if (optionGame == 5) {
+            // Save
+            Gdx.app.exit();
+    }   }
 
 
     // See libGDX documentation
