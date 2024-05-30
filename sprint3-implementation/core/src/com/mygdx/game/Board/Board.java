@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
+import java.util.stream.Collectors;
 
 // Class managing state relating to the FieryDragon Board
 // Responsibility includes
@@ -28,7 +29,6 @@ public class Board {
      // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
      AnimalType[] volcanoMap;
-     Map<String, List<String>> yamlData;
 
      // length of the board
      int length;
@@ -48,7 +48,7 @@ public class Board {
           try {
                // load data from yaml file into a Map object
                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-               yamlData = yaml.load(inputStream);
+               Map<String, List<String>> yamlData = yaml.load(inputStream);
                inputStream.close();
 
                // get boardData and playerPosition
@@ -97,7 +97,6 @@ public class Board {
      public boolean movePlayerBy(Player player, int moves) {
           // how many moves the player have made/ how far away they are from the cave if the move is made
           int newDistanceFromCave = this.playerDistanceFromCave.get(player) + moves;
-          System.out.println("New distance from cave: " + newDistanceFromCave);
 
           // player position on the board
           int playerPosition = this.playerPositions.get(player);
@@ -231,7 +230,6 @@ public class Board {
 
                AnimalType randomAniType = types.get(i % playerCount);
                playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
-
                if (position != null) {
                     int currentPosition = Integer.parseInt(position.get(i));
                     if (currentPosition != startLocation) {
@@ -272,5 +270,13 @@ public class Board {
      // return true if game has a winner and ended, false otherwise
      public boolean hasGameEnded() {
           return gameEnded;
+     }
+
+     // save information to yaml file
+     public HashMap<String, List<String>> save() {
+          HashMap<String, List<String>> map = new HashMap<>();
+          map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
+          map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
+          return map;
      }
 }
