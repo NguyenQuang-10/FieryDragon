@@ -26,8 +26,6 @@ public class PauseScreen implements Screen {
     // See libGDX documentation
     SpriteBatch batch;
     OrthographicCamera camera;
-
-    int optionGame = 0;
     GameScreen savegameScreen;
 
     // Constructor
@@ -40,17 +38,13 @@ public class PauseScreen implements Screen {
 
 
     // See libGDX documentation
-    /*
-        Draw a screen to configure the start of the game (e.g How many players?)
-     */
     @Override
     public void show() {
         // Initialize stage, font, batch, and layout
         stage = new Stage();
         font = new BitmapFont();
         batch = new SpriteBatch();
-        layout = new GlyphLayout(font, " Option\n Press 1 to continue\n Press 2 to restart \n Press 3 to save game \n Press 4 to quit game \n Press 5 to quit and save");
-
+        layout = new GlyphLayout(font, " Option\n Press 1 to continue\n Press 2 to restart \n Press 3 to quit game and not save \n Press 4 to quit and save");
         // Set the viewport for the stage
         stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
 
@@ -73,37 +67,20 @@ public class PauseScreen implements Screen {
         font.draw(batch, layout, drawX, drawY);
         batch.end();
 
-        // Check for key presses to determine the number of players
+        // Check for key presses to determine action
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            optionGame = 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            optionGame = 2;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            optionGame = 3;
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            optionGame = 4;
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            optionGame = 5;
-        }
-        if (optionGame == 1) {
             this.resume();
-        }
-        // If ready to start the game, create a new GameScreen and set it as the active screen
-        if (optionGame == 2) {
-            game.dispose(); 
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            game.dispose();
             game.beforeGameScreen = new BeforeGameScreen(game);
             game.setScreen(game.beforeGameScreen);
-        }
-
-        if (optionGame == 4) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             Gdx.app.exit();
         }
-        if (optionGame == 5) {
-            // Save
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             Gdx.app.exit();
-    }   }
+        }
+    }
 
 
     // See libGDX documentation
