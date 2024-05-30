@@ -40,7 +40,7 @@ public class Board {
        @param players - players partaking in the game
        @param volcanoMap - array of AnimalType that describe the board topology
      */
-     public Board(Player[] players, String mode) {
+     public Board(Player[] players, String mode, Map<String, AnimalType> animalTypeMap) {
           // create yaml object and instantiate variables
           Yaml yaml = new Yaml();
           List<String> boardData = new ArrayList<>();
@@ -64,11 +64,7 @@ public class Board {
                System.out.print(e.getMessage());
           }
 
-          // generate AnimalType array
-          Map<String, AnimalType> animalTypeMap = new HashMap<>();
-          for (AnimalType animalType : AnimalType.values()) {
-               animalTypeMap.put(animalType.name(), animalType);
-          }
+
 
           // render the board using VolcanoCard
           AnimalType[] volcanoPosition = new AnimalType[boardData.size()];
@@ -101,7 +97,7 @@ public class Board {
      public boolean movePlayerBy(Player player, int moves) {
           // how many moves the player have made/ how far away they are from the cave if the move is made
           int newDistanceFromCave = this.playerDistanceFromCave.get(player) + moves;
-          System.out.println(newDistanceFromCave);
+          System.out.println("New distance from cave: " + newDistanceFromCave);
 
           // player position on the board
           int playerPosition = this.playerPositions.get(player);
