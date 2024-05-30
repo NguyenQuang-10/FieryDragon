@@ -34,7 +34,6 @@ public class StartScreen implements Screen {
     // See libGDX documentation
     SpriteBatch batch;
     OrthographicCamera camera;
-    int optionGame = 0;
 
     boolean readyToStartGame = false;
 
@@ -95,26 +94,17 @@ public class StartScreen implements Screen {
         font.draw(batch, layout, drawX, drawY);
         batch.end();
 
-
-
         // Check for key presses to determine the number of players
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            optionGame = 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
-            optionGame = 2;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            optionGame = 3;
-        }
-
-        if (optionGame == 1) {
             game.beforeGameScreen = new BeforeGameScreen(game);
             game.setScreen(game.beforeGameScreen);
-        }
-        // If ready to start the game, create a new GameScreen and set it as the active screen
-
-        if (optionGame == 3) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
+            int num = 0;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             Gdx.app.exit();
         }
+
+
     }
 
 
