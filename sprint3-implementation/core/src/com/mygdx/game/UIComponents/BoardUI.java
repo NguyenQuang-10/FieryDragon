@@ -270,12 +270,10 @@ public class BoardUI extends FieryDragonUI {
     @Override
     public void startTurnChange() {
         super.startTurnChange();
-        System.out.println("Turn changed");
     }
 
     @Override
     public void endTurnChange() {
         super.endTurnChange();
-        System.out.println("Ended turn changed");
     }
 }

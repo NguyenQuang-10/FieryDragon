@@ -11,7 +11,7 @@ You can obtain the source code for this project from: https://git.infotech.monas
 + Else please change it to JDK 15, by editing your environment variable.
 
 ## Navigating to the code repository to follow video instruction
-- Unzip FIT3077_Sprint2_Team377_CL.zip archive
+- Unzip Sprint3_Team377_Repository.zip archive
 - Navigate to into the sprint3-implementation directory, under this directory is the code for the project
 - Right-click and run using IntelliJ IDEA, alternatively open this directory in an existing IntelliJ IDEA window
 
