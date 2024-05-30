@@ -17,7 +17,11 @@ import com.mygdx.game.UIComponents.BoardUI;
 import com.mygdx.game.ChitCards.AnimalType;
 import com.mygdx.game.Board.Player;
 import com.mygdx.game.UIComponents.ChitCardManagerUI;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 // Screen that display the actual game
@@ -73,10 +77,21 @@ public class GameScreen implements Screen {
         }
 
         // initialise other attributes
-        board = new Board(players, "default", animalTypeMap);
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> yamlData = new HashMap<>();
+        try {
+            InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
+            yamlData = yaml.load(inputStream);
+            inputStream.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        String load_option = String.valueOf(yamlData.get("load_option"));
+        board = new Board(players, load_option, animalTypeMap);
 
 
-        chitCardManager = new ChitCardManager(players, "custom", animalTypeMap);
+        chitCardManager = new ChitCardManager(players, load_option, animalTypeMap);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
         chitCardManagerUI = new ChitCardManagerUI(390, 170,4,4, board, chitCardManager);
         font = new BitmapFont();
