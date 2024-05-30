@@ -1,53 +1,15 @@
----
-saved: false
-load_option: "default"
-
-boardDefault: ["BABY_DRAGON","BAT","SPIDER",
-               "SPIDER","BAT","SALAMANDER",
-               "SALAMANDER","SPIDER","BAT",
-               "BABY_DRAGON","SALAMANDER","BAT",
-               "SPIDER","SALAMANDER","BABY_DRAGON",
-               "BAT","BABY_DRAGON","SALAMANDER",
-               "BAT","SPIDER","BABY_DRAGON",
-               "SALAMANDER","BABY_DRAGON","SPIDER"]
-
-boardCustom: []
-
-playerPositionCustom: ["11", "11", "17", "23"]
-
-chitCardType:
-  - "BABY_DRAGON"
-  - "BABY_DRAGON"
-  - "BABY_DRAGON"
-  - "BAT"
-  - "BAT"
-  - "BAT"
-  - "SPIDER"
-  - "SPIDER"
-  - "SPIDER"
-  - "SALAMANDER"
-  - "SALAMANDER"
-  - "SALAMANDER"
-  - "PIRATE_DRAGON"
-  - "PIRATE_DRAGON"
-  - "PIRATE_DRAGON"
-  - "PIRATE_DRAGON"
-
-chitCardNumber:
-  - "1"
-  - "2"
-  - "3"
-  - "1"
-  - "2"
-  - "3"
-  - "1"
-  - "2"
-  - "3"
-  - "1"
-  - "2"
-  - "3"
-  - "1"
-  - "2"
-  - "1"
-  - "2"
-
+saved: true
+load_option: custom
+playerNumber: '2'
+boardDefault: [BABY_DRAGON, BAT, SPIDER, SPIDER, BAT, SALAMANDER, SALAMANDER, SPIDER,
+  BAT, BABY_DRAGON, SALAMANDER, BAT, SPIDER, SALAMANDER, BABY_DRAGON, BAT, BABY_DRAGON,
+  SALAMANDER, BAT, SPIDER, BABY_DRAGON, SALAMANDER, BABY_DRAGON, SPIDER]
+boardCustom: [BABY_DRAGON, BAT, SPIDER, SALAMANDER, BAT, SPIDER, SALAMANDER, SPIDER,
+  BAT, BAT, SALAMANDER, BABY_DRAGON, BABY_DRAGON, SALAMANDER, SPIDER, BAT, BABY_DRAGON,
+  SALAMANDER, BABY_DRAGON, SPIDER, BAT, SPIDER, BABY_DRAGON, SALAMANDER]
+playerPositionCustom: ['9', '19']
+chitCardType: [BABY_DRAGON, PIRATE_DRAGON, SALAMANDER, PIRATE_DRAGON, PIRATE_DRAGON,
+  BABY_DRAGON, SPIDER, SPIDER, BAT, SALAMANDER, SALAMANDER, PIRATE_DRAGON, SPIDER,
+  BAT, BABY_DRAGON, BAT]
+chitCardNumber: ['1', '2', '2', '2', '1', '2', '2', '3', '2', '3', '1', '1', '1',
+  '3', '3', '1']
