@@ -12,9 +12,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
 import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +39,6 @@ public class StartScreen implements Screen {
     SpriteBatch batch;
     OrthographicCamera camera;
 
-    boolean readyToStartGame = false;
 
     // Constructor
     public StartScreen(FieryDragonGame game) {
@@ -47,7 +50,7 @@ public class StartScreen implements Screen {
 
     // See libGDX documentation
     /*
-        Draw a screen to configure the start of the game (e.g How many players?)
+        Draw a screen to configure the start of the game (e.g. How many players?)
      */
     @Override
     public void show() {
@@ -69,11 +72,13 @@ public class StartScreen implements Screen {
     public void render(float delta) {
         Yaml yaml = new Yaml();
         boolean checkSaved = false;
+        Map<String, Object> yamlData = new HashMap<>();
+        Path path = Paths.get("save_file.yaml");
         try {
-            InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-            Map<String, Boolean> yamlData = yaml.load(inputStream);
+            InputStream inputStream = Files.newInputStream(path);
+            yamlData = yaml.load(inputStream);
             inputStream.close();
-            checkSaved = yamlData.get("saved");
+            checkSaved = (boolean) yamlData.get("saved");
         } catch(Exception e) {
             System.out.print(e.getMessage());
         }
@@ -98,8 +103,26 @@ public class StartScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             game.beforeGameScreen = new BeforeGameScreen(game);
             game.setScreen(game.beforeGameScreen);
+            yamlData.put("load_option", "default");
+
+            try (FileWriter writer = new FileWriter(path.toFile())) {
+                yaml.dump(yamlData, writer);
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
+
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
-            int num = 0;
+            game.numberOfPlayers = Integer.parseInt((String) yamlData.get("playerNumber"));
+            game.gameScreen = new GameScreen(game);
+            game.setScreen(game.gameScreen);
+            yamlData.put("load_option", "custom");
+
+
+            try (FileWriter writer = new FileWriter(path.toFile())) {
+                yaml.dump(yamlData, writer);
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             Gdx.app.exit();
         }
