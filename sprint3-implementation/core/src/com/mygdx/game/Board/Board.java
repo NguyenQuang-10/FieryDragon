@@ -4,7 +4,6 @@ package com.mygdx.game.Board;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ChitCards.AnimalType;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -40,22 +39,23 @@ public class Board {
        @param players - players partaking in the game
        @param volcanoMap - array of AnimalType that describe the board topology
      */
-     public Board(Player[] players, AnimalType[] volcanoMap){
-          setVolcanoMap(volcanoMap);
-          setPlayers(players);
-     }
+//     public Board(Player[] players, AnimalType[] volcanoMap){
+//          setVolcanoMap(volcanoMap);
+//          setPlayers(players);
+//     }
 
      public Board(Player[] players, String mode) {
           Yaml yaml = new Yaml();
           List<String> boardData = new ArrayList<>();
           try {
                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-               Map<String, List> yamlData = yaml.load(inputStream);
+               Map<String, List<String>> yamlData = yaml.load(inputStream);
                inputStream.close();
+
                if (mode.equals("default")) {
-                    boardData = (List<String>) yamlData.get("boardDefault");
+                    boardData = yamlData.get("boardDefault");
                } else {
-                    boardData = (List<String>) yamlData.get("boardCustom");
+                    boardData = yamlData.get("boardCustom");
                }
 
           } catch(Exception e) {
