@@ -99,6 +99,22 @@ public class GameScreen implements Screen {
         glyphLayout = new GlyphLayout();
     }
 
+    public Map<String, Object> save() {
+        HashMap<String, Object> data = new HashMap<>();
+
+        Map<String, List<String>> boardData = board.save();
+        data.put("boardCustom", boardData.get("boardCustom"));
+        data.put("playerPositionCustom", boardData.get("playerPositionCustom"));
+
+        Map<String, List<String>> chitCardData = chitCardManager.save();
+        data.put("chitCardType", chitCardData.get("chitCardType"));
+        data.put("chitCardNumber", chitCardData.get("chitCardNumber"));
+
+        data.put("playerNumber", String.valueOf(board.getPlayers().length));
+
+        return data;
+    }
+
     // See libGDX documentation
     @Override
     public void show() {
