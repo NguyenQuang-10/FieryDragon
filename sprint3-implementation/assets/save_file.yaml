@@ -8,11 +8,11 @@ boardDefault: ["BABY_DRAGON","BAT","SPIDER",
                "SPIDER","SALAMANDER","BABY_DRAGON",
                "BAT","BABY_DRAGON","SALAMANDER",
                "BAT","SPIDER","BABY_DRAGON",
-               "SALAMANDER","BABY_DRAGON","SPIDER" ]
+               "SALAMANDER","BABY_DRAGON","SPIDER"]
 
 boardCustom: []
 
-playerPositionCustom: []
+playerPositionCustom: ["11", "11", "17", "23"]
 
 chitCardType:
   - "BABY_DRAGON"

@@ -11,7 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 
 // Class managing state relating to the FieryDragon Board
-// Responsbility includes
+// Responsibility includes
 // - moving Player
 // - ending the game
 // - initiating and keeping track of board arrangement
@@ -28,6 +28,7 @@ public class Board {
      // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
      AnimalType[] volcanoMap;
+     Map<String, List<String>> yamlData;
 
      // length of the board
      int length;
@@ -39,34 +40,37 @@ public class Board {
        @param players - players partaking in the game
        @param volcanoMap - array of AnimalType that describe the board topology
      */
-//     public Board(Player[] players, AnimalType[] volcanoMap){
-//          setVolcanoMap(volcanoMap);
-//          setPlayers(players);
-//     }
-
      public Board(Player[] players, String mode) {
+          // create yaml object and instantiate variables
           Yaml yaml = new Yaml();
           List<String> boardData = new ArrayList<>();
+          List<String> playerPosition = new ArrayList<>();
           try {
+               // load data from yaml file into a Map object
                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-               Map<String, List<String>> yamlData = yaml.load(inputStream);
+               yamlData = yaml.load(inputStream);
                inputStream.close();
 
+               // get boardData and playerPosition
                if (mode.equals("default")) {
                     boardData = yamlData.get("boardDefault");
+
                } else {
                     boardData = yamlData.get("boardCustom");
+                    playerPosition = yamlData.get("playerPositionCustom");
                }
 
           } catch(Exception e) {
                System.out.print(e.getMessage());
           }
 
+          // generate AnimalType array
           Map<String, AnimalType> animalTypeMap = new HashMap<>();
           for (AnimalType animalType : AnimalType.values()) {
                animalTypeMap.put(animalType.name(), animalType);
           }
 
+          // render the board using VolcanoCard
           AnimalType[] volcanoPosition = new AnimalType[boardData.size()];
           for (int i = 0; i < boardData.size() / 3; i++) {
                AnimalType animalType1 = animalTypeMap.get(boardData.get(i * 3));
@@ -79,8 +83,14 @@ public class Board {
                volcanoPosition[i*3+1] = animalTypes.get(1);
                volcanoPosition[i*3+2] = animalTypes.get(2);
           }
+
+          // set VolcanoMap and Player
           setVolcanoMap(volcanoPosition);
-          setPlayers(players);
+          if (mode.equals("default")) {
+               setPlayers(players, null);
+          } else if (mode.equals("custom")) {
+               setPlayers(players, playerPosition);
+          }
      }
 
      /*
@@ -192,7 +202,7 @@ public class Board {
      /*
           @param - newPlayers: array of Player object participating in the game
       */
-     protected void setPlayers(Player[] newPlayers) {
+     protected void setPlayers(Player[] newPlayers, List<String> position) {
           int playerCount = newPlayers.length;
 
           // evenly spaces caves out on the board with randomised animal types
@@ -208,8 +218,18 @@ public class Board {
 
                AnimalType randomAniType = types.get(i % playerCount);
                playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
-               this.playerPositions.put(newPlayers[i], startLocation);
-               this.playerDistanceFromCave.put(newPlayers[i], 0);
+
+               if (position != null) {
+                    int currentPosition = Integer.parseInt(position.get(i));
+                    if (currentPosition != startLocation) {
+                         newPlayers[i].isInCave = false;
+                    }
+                    this.playerPositions.put(newPlayers[i], currentPosition);
+                    this.playerDistanceFromCave.put(newPlayers[i], (currentPosition - startLocation + 24) % 24);
+               } else {
+                    this.playerPositions.put(newPlayers[i], startLocation);
+                    this.playerDistanceFromCave.put(newPlayers[i], 0);
+               }
           }
      }
 
