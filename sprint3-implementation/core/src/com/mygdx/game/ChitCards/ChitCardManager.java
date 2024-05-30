@@ -103,4 +103,20 @@ public class ChitCardManager implements ITurnManager {
 
     // get the array of every chit card in the game.
     public ChitCard[] getChitCards() { return this.chitCards; }
+
+    @Override
+    public Map<String, List<String>> save() {
+        HashMap<String, List<String>> chitCardData = new HashMap<>();
+        List<String> chitCardType = new ArrayList<>();
+        List<String> chitCardNumber = new ArrayList<>();
+
+        for (ChitCard chitCard: chitCards) {
+            chitCardType.add(chitCard.getType().toString());
+            chitCardNumber.add(String.valueOf(chitCard.getAnimalCount()));
+        }
+
+        chitCardData.put("chitCardType", chitCardType);
+        chitCardData.put("chitCardNumber", chitCardNumber);
+        return chitCardData;
+    }
 }
