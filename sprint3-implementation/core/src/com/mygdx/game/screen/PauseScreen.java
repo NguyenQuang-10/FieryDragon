@@ -11,6 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 
 public class PauseScreen implements Screen {
     // Game instance - See libGDX documentation
@@ -26,12 +34,12 @@ public class PauseScreen implements Screen {
     // See libGDX documentation
     SpriteBatch batch;
     OrthographicCamera camera;
-    GameScreen savegameScreen;
+    GameScreen saveGameScreen;
 
     // Constructor
     public PauseScreen(FieryDragonGame game, GameScreen gameScreen) {
         this.game = game;
-        this.savegameScreen = gameScreen;
+        this.saveGameScreen = gameScreen;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.WIDTH, game.HEIGHT);
     }
@@ -67,6 +75,10 @@ public class PauseScreen implements Screen {
         font.draw(batch, layout, drawX, drawY);
         batch.end();
 
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlData;
+        Path path = Paths.get("save_file.yaml");
+
         // Check for key presses to determine action
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             this.resume();
@@ -75,9 +87,46 @@ public class PauseScreen implements Screen {
             game.beforeGameScreen = new BeforeGameScreen(game);
             game.setScreen(game.beforeGameScreen);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            // quit and not save
+            try {
+                InputStream inputStream = Files.newInputStream(path);
+                yamlData = yaml.load(inputStream);
+                inputStream.close();
+
+                yamlData.put("saved", false);
+                try (FileWriter writer = new FileWriter(path.toFile())) {
+                    yaml.dump(yamlData, writer);
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            } catch(Exception e) {
+                System.out.print(e.getMessage());
+            }
             Gdx.app.exit();
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            // quit and save
+            try {
+                InputStream inputStream = Files.newInputStream(path);
+                yamlData = yaml.load(inputStream);
+                inputStream.close();
+
+                Map<String, Object> data = saveGameScreen.save();
+                yamlData.put("saved", true);
+                yamlData.put("boardCustom", data.get("boardCustom"));
+                yamlData.put("playerPositionCustom", data.get("playerPositionCustom"));
+                yamlData.put("chitCardType", data.get("chitCardType"));
+                yamlData.put("chitCardNumber", data.get("chitCardNumber"));
+
+                try (FileWriter writer = new FileWriter(path.toFile())) {
+                    yaml.dump(yamlData, writer);
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
             Gdx.app.exit();
         }
     }
@@ -99,7 +148,7 @@ public class PauseScreen implements Screen {
     // Called when the game is resumed from a paused state
     @Override
     public void resume() {
-        game.setScreen(this.savegameScreen);
+        game.setScreen(this.saveGameScreen);
     }
 
     // Called when this screen is no longer the current screen
