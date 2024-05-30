@@ -24,7 +24,7 @@ public class Board {
      Map<Player, Integer> playerDistanceFromCave = new HashMap<>();
 
      // map linking player to the cave that belongs to them
-     Map<Player, Integer> playerPositions = new HashMap<>();
+     Map<Player, Integer> playerPositions = new LinkedHashMap<>();
 
      // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
@@ -72,12 +72,19 @@ public class Board {
                AnimalType animalType1 = animalTypeMap.get(boardData.get(i * 3));
                AnimalType animalType2 = animalTypeMap.get(boardData.get(i * 3 + 1));
                AnimalType animalType3 = animalTypeMap.get(boardData.get(i * 3 + 2));
-               VolcanoCard volcanoCard = new VolcanoCard(animalType1, animalType2, animalType3);
+               if (mode.equals("default")) {
+                    VolcanoCard volcanoCard = new VolcanoCard(animalType1, animalType2, animalType3);
 
-               Array<AnimalType> animalTypes = volcanoCard.getTypes();
-               volcanoPosition[i*3] = animalTypes.get(0);
-               volcanoPosition[i*3+1] = animalTypes.get(1);
-               volcanoPosition[i*3+2] = animalTypes.get(2);
+                    Array<AnimalType> animalTypes = volcanoCard.getTypes();
+                    volcanoPosition[i*3] = animalTypes.get(0);
+                    volcanoPosition[i*3+1] = animalTypes.get(1);
+                    volcanoPosition[i*3+2] = animalTypes.get(2);
+               } else {
+                    volcanoPosition[i*3] = animalType1;
+                    volcanoPosition[i*3+1] = animalType2;
+                    volcanoPosition[i*3+2] = animalType3;
+               }
+
           }
 
           // set VolcanoMap and Player
