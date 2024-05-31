@@ -22,7 +22,7 @@ public abstract class ChitCard {
     final protected ITurnManager manager;
 
     // Constructor
-    public ChitCard(AnimalType type, int animalCount, Board board, ChitCardManager manager) {
+    public ChitCard(AnimalType type, int animalCount, Board board, ITurnManager manager) {
         this.type = type;
         this.animalCount = animalCount;
         this.board = board;

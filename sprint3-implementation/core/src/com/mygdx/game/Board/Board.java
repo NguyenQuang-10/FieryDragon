@@ -4,6 +4,7 @@ package com.mygdx.game.Board;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ChitCards.AnimalType;
 
+import java.io.Console;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -114,6 +115,7 @@ public class Board {
 
           if (newPosition < 0) {
                newPosition = this.length - (Math.abs(newPosition) % this.length );
+               System.out.println(newPosition);
           }
 
           // the cave that belongs to the current player
@@ -138,7 +140,11 @@ public class Board {
 
                if (shouldPerformMove) {
                     player.isInCave = false;
-                    newPosition -= 1;
+                    if (newPosition > 0) {
+                         newPosition -= 1;
+                    } else {
+                         newPosition = volcanoMap.length - 1;
+                    }
                     this.playerPositions.put(player, newPosition);
                     this.playerDistanceFromCave.put(player, newDistanceFromCave);
                }
