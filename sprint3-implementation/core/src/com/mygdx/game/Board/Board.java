@@ -144,7 +144,7 @@ public class Board {
                }
 
                return shouldPerformMove;
-          } else if (newDistanceFromCave == this.volcanoMap.length + 2) {
+          } else if (newDistanceFromCave == this.volcanoMap.length + 2 && moves > 0) {
                // if player looped around the board with an exact number of moves, let them in the cave
                // and end the game
 
@@ -173,7 +173,7 @@ public class Board {
                // needed to enter the cave
                // and prevent player from moving too far back beyond where they exit the cave (i.e. the player cannot
                // move backward into their cave or beyond it)
-               if (newDistanceFromCave < 1 || newDistanceFromCave > this.volcanoMap.length + 2) {
+               if (newDistanceFromCave > this.volcanoMap.length + 2) {
                     shouldPerformMove = false;
                }
 
@@ -285,5 +285,40 @@ public class Board {
           map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
           map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
           return map;
+     }
+
+     // calculate the min number of moves needed to reach position toPosition from fromPosition
+     // @param
+     //   fromPosition (int) - the starting position, in the range [0, boardLength]
+     //   toPosition (int) - the ending position, in the range [0, boardLength]
+     //
+     // return as an integer the number of moves needed to make, negative means moving backward,
+     // positive mean moving forward
+     public int getDistanceBetween(int fromPosition, int toPosition) {
+          // how many move backwards needed to reach toPosition from fromPosition
+          int backwardDistance;
+          if (toPosition < fromPosition) { // e.g. fromPosition is 6 and toPosition is 3 => distance backward is -3
+               backwardDistance = toPosition - fromPosition;
+          } else { // e.g. fromPosition is 3 and toPosition is 22 with board length of 24 (rmb that the last slot (23) is followed by slot 0)
+                   // the distance backward is -5, fromPosition to slot 0 is 3 move backwards, slot 0 to slot 22 is -2 slot backwards
+               backwardDistance = -fromPosition + (toPosition - volcanoMap.length);
+          }
+
+
+          // how many move forward needed to reach toPosition from fromPosition
+          int forwardDistance;
+          if (toPosition > fromPosition) { // e.g. fromPosition is 3 and toPosition is 6 => distance forward is 3
+               forwardDistance = toPosition - fromPosition;
+          } else { // e.g. fromPosition is 22 and toPosition is 3 with board length of 24 (rmb that the last slot (23) is followed by slot 0)
+               // the distance forward is 5, fromPosition to slot 0 is 2 move forward, slot 0 to slot 3 is 3 slot forward
+               forwardDistance = (volcanoMap.length - fromPosition) + toPosition;
+          }
+
+          if (Math.abs(backwardDistance) < forwardDistance) {
+               return backwardDistance;
+          } else {
+               return forwardDistance;
+          }
+
      }
 }
