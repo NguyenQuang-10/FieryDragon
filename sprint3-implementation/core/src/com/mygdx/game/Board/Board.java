@@ -21,7 +21,7 @@ public class Board {
      // map linking player to the cave that belongs to them
      Map<Player, Cave> playerCave = new LinkedHashMap<>();
 
-     // map linking player to the cave that belongs to them
+     // map linking player to the cave that belongs to the
      Map<Player, Integer> playerDistanceFromCave = new HashMap<>();
 
      // map linking player to the cave that belongs to them
@@ -30,6 +30,8 @@ public class Board {
      // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
      AnimalType[] volcanoMap;
+     private Timer gameTimer;
+     boolean timeLimitReached = false;
 
      // length of the board
      int length;
@@ -67,6 +69,7 @@ public class Board {
 
 
 
+
           // render the board using VolcanoCard
           AnimalType[] volcanoPosition = new AnimalType[boardData.size()];
           for (int i = 0; i < boardData.size() / 3; i++) {
@@ -95,6 +98,28 @@ public class Board {
           } else if (mode.equals("custom")) {
                setPlayers(players, playerPosition);
           }
+          startGameTimer();
+     }
+     private void startGameTimer() {
+          gameTimer = new Timer();
+          gameTimer.schedule(new TimerTask() {
+               @Override
+               public void run() {
+                    endGame();
+               }
+// the time limit to play the game was 3 hours
+          }, 648000000);
+     }
+     public void endGame() {
+          // Cancel the timer
+          gameTimer.cancel();
+          // Set the gameEnded flag to true
+          gameEnded = true;
+          // Print the time limit message
+          timeLimitReached = true;
+     }
+     public boolean hasTimeLimitReached() {
+          return timeLimitReached;
      }
 
      /*

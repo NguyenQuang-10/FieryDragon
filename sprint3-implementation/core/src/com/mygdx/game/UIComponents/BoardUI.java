@@ -25,6 +25,7 @@ public class BoardUI extends FieryDragonUI {
     final private Map<Cave, Coordinate> caveCoorMap = new HashMap<>();
     // Controller/Board instance
     Board board;
+    private boolean isGameStart = true;
 
     // height of the rectangular board (how many volcano square)
     final private int boardHeight;
@@ -87,24 +88,54 @@ public class BoardUI extends FieryDragonUI {
     // Draw the board to the screen
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-        drawVolcanoes(batch);
-        drawCaves(batch);
-        drawPlayers(batch);
-        drawText(batch);
+        if (isGameStart) {
+            glyphLayout.setText(font, "The time limit of playing will be 100 seconds");
+            font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
+            // Set the flag to false after displaying the message once
+            isGameStart = false;
+        } else {
+            // Call the superclass draw method after the initial message has been displayed
+            super.draw(batch, parentAlpha);
+            drawVolcanoes(batch);
+            drawCaves(batch);
+            drawPlayers(batch);
+            drawText(batch);
+        }
     }
 
     private void drawText(Batch batch) {
+        String message;
+
         if (board.hasGameEnded()) {
-            glyphLayout.setText(font, String.format("%s Won!!!", currentActivePlayer.getName()));
+            if (board.hasTimeLimitReached()) {
+                message = "You have reached the time limit,\nstop playing the game please!";
+                font.getData().setScale(1.5f);
+                glyphLayout.setText(font, message);
+                // Calculate the x position for right alignment
+                // Increase the right margin for further right alignment
+                float xPosition = getX() + getWidth() - glyphLayout.width + 120; // Increased right margin to 50
+                float yPosition = getY() + getHeight() - glyphLayout.height + 20;
+                font.draw(batch, glyphLayout, xPosition, yPosition);
+                font.getData().setScale(1.0f);
+                return;
+            } else {
+                message = String.format("%s Won!!!", currentActivePlayer.getName());
+            }
         } else {
             if (isWaitingForTurnEnd()) {
-                glyphLayout.setText(font, "Turn Ended!");
+                message = "Turn Ended!";
             } else {
-                glyphLayout.setText(font, String.format("%s's Turn", currentActivePlayer.getName()));
+                message = String.format("%s's Turn", currentActivePlayer.getName());
             }
         }
-        font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
+
+        // Set the text for the current state
+        glyphLayout.setText(font, message);
+        // Draw the text for the current state
+        // Ensure this is only drawn if the game has not ended due to time limit
+        if (!board.hasTimeLimitReached()) {
+            font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
+        }
     }
 
     /*
