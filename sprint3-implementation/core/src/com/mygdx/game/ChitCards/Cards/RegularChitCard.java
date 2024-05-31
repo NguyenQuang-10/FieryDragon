@@ -1,10 +1,13 @@
-package com.mygdx.game.ChitCards;
+package com.mygdx.game.ChitCards.Cards;
 
 import com.mygdx.game.Board.Board;
 import com.mygdx.game.Board.Player;
+import com.mygdx.game.ChitCards.AnimalType;
+import com.mygdx.game.ChitCards.ChitCard;
+import com.mygdx.game.ChitCards.ChitCardManager;
 
 // A chit card that has a Salamander, Baby Dragon, Spider or Bat type
-public class RegularChitCard extends ChitCard{
+public class RegularChitCard extends ChitCard {
     // Constructor
     public RegularChitCard(AnimalType type, int animalCount, Board board, ChitCardManager manager) {
         super(type, animalCount, board, manager);

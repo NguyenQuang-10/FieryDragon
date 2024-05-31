@@ -88,13 +88,26 @@ public class ChitCardManagerUI extends Group {
         filePrefixes.put(AnimalType.BAT, "bat");
         filePrefixes.put(AnimalType.SPIDER, "spider");
         filePrefixes.put(AnimalType.PIRATE_DRAGON, "pirateDragon");
+//        filePrefixes.put(AnimalType.SWAP, "");
 
         for (ChitCard chit : chitCards) {
             String filePrefix = filePrefixes.get(chit.getType());
             int count = chit.getAnimalCount();
 
-            String fileName = String.format("Chit\\%s%d.png", filePrefix, count);
-            Texture sprite = new Texture(Gdx.files.internal(fileName));
+            String fileName;
+            if (count > 0) {
+                fileName = String.format("Chit\\%s%d.png", filePrefix, count);
+            } else {
+                fileName = String.format("Chit\\%s.png", filePrefix);
+            }
+
+            Texture sprite;
+            try {
+                sprite = new Texture(Gdx.files.internal(fileName));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                sprite = new Texture("Chit\\back.png");
+            }
             chitCardSprites.put(chit, sprite);
         }
     }
