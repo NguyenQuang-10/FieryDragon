@@ -88,7 +88,7 @@ public class ChitCardManagerUI extends Group {
         filePrefixes.put(AnimalType.BAT, "bat");
         filePrefixes.put(AnimalType.SPIDER, "spider");
         filePrefixes.put(AnimalType.PIRATE_DRAGON, "pirateDragon");
-//        filePrefixes.put(AnimalType.SWAP, "");
+        filePrefixes.put(AnimalType.SWAP, "swap");
 
         for (ChitCard chit : chitCards) {
             String filePrefix = filePrefixes.get(chit.getType());
