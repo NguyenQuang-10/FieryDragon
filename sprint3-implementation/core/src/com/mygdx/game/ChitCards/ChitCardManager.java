@@ -2,6 +2,9 @@ package com.mygdx.game.ChitCards;
 
 import com.mygdx.game.Board.Board;
 import com.mygdx.game.Board.Player;
+import com.mygdx.game.ChitCards.Cards.PirateChitCard;
+import com.mygdx.game.ChitCards.Cards.RegularChitCard;
+import com.mygdx.game.ChitCards.Cards.SwapChitCard;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -44,7 +47,7 @@ public class ChitCardManager implements ITurnManager {
 
             // generate the ChitCards sequentially and add regular ChitCard to the board
             for (AnimalType animalType : animalTypes) {
-                if (animalType != AnimalType.PIRATE_DRAGON) {
+                if (animalType != AnimalType.PIRATE_DRAGON && animalType != AnimalType.SWAP) {
                     for (int aCount = 1; aCount <= 3; aCount++) {
                         ChitCard card = new RegularChitCard(animalType, aCount, board, this);
                         cards.add(card);
@@ -57,6 +60,11 @@ public class ChitCardManager implements ITurnManager {
                 cards.add(new PirateChitCard(i, board, this));
                 cards.add(new PirateChitCard(i, board, this));
             }
+
+            cards.add(new SwapChitCard(board, this));
+            cards.add(new SwapChitCard(board, this));
+
+
             // shuffle the generated ChitCards
             Collections.shuffle(cards);
         } else if (mode.equals("custom")) {
@@ -99,6 +107,12 @@ public class ChitCardManager implements ITurnManager {
     // see ITurnManager
     public Player getActivePlayer() {
         return this.players[activePlayerIndex];
+    }
+
+    // return all player that are currently in the game
+    @Override
+    public Player[] getAllPlayers() {
+        return this.players;
     }
 
     // get the array of every chit card in the game.

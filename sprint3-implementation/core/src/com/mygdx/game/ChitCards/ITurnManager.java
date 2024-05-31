@@ -11,6 +11,7 @@ public interface ITurnManager {
     public void endTurn();
     // get the player whose turn it is
     public Player getActivePlayer();
+    public Player[] getAllPlayers();
 
     Map<String, List<String>> save();
 }
