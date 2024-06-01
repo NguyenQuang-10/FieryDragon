@@ -8,6 +8,8 @@ import java.io.Console;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+
+import com.mygdx.game.screen.GameScreen;
 import org.yaml.snakeyaml.Yaml;
 import java.io.InputStream;
 import java.util.stream.Collectors;
@@ -107,8 +109,8 @@ public class Board {
                public void run() {
                     endGame();
                }
-// the time limit to play the game was 3 hours
-          }, 648000000);
+// the time limit to play the game was 5 minutes
+          }, 300000);
      }
      public void endGame() {
           // Cancel the timer

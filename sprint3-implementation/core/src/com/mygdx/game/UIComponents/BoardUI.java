@@ -88,19 +88,12 @@ public class BoardUI extends FieryDragonUI {
     // Draw the board to the screen
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if (isGameStart) {
-            glyphLayout.setText(font, "The time limit of playing will be 100 seconds");
-            font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
-            // Set the flag to false after displaying the message once
-            isGameStart = false;
-        } else {
             // Call the superclass draw method after the initial message has been displayed
             super.draw(batch, parentAlpha);
             drawVolcanoes(batch);
             drawCaves(batch);
             drawPlayers(batch);
             drawText(batch);
-        }
     }
 
     private void drawText(Batch batch) {
