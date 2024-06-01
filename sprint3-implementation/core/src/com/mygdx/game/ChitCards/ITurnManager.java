@@ -13,5 +13,7 @@ public interface ITurnManager {
     public Player getActivePlayer();
     public Player[] getAllPlayers();
 
-    Map<String, List<String>> save();
+    Map<String, List<String>> saveChitCard();
+
+    Map<String, Integer> saveCurrentPlayer();
 }
