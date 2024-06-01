@@ -116,16 +116,16 @@ public class StartScreen implements Screen {
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
             game.numberOfPlayers = Integer.parseInt((String) yamlData.get("playerNumber"));
-            game.gameScreen = new GameScreen(game);
-            game.setScreen(game.gameScreen);
             yamlData.put("load_option", "custom");
-
 
             try (FileWriter writer = new FileWriter(path.toFile())) {
                 yaml.dump(yamlData, writer);
             } catch (Exception e) {
                 System.out.print(e.getMessage());
             }
+
+            game.gameScreen = new GameScreen(game);
+            game.setScreen(game.gameScreen);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             Gdx.app.exit();
         }
