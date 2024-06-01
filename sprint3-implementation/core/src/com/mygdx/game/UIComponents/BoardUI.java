@@ -101,12 +101,12 @@ public class BoardUI extends FieryDragonUI {
 
         if (board.hasGameEnded()) {
             if (board.hasTimeLimitReached()) {
-                message = "You have reached the time limit,\nstop playing the game please!";
+                message = "You have reached the time limit,\npress 0 to pause the game please!";
                 font.getData().setScale(1.5f);
                 glyphLayout.setText(font, message);
                 // Calculate the x position for right alignment
                 // Increase the right margin for further right alignment
-                float xPosition = getX() + getWidth() - glyphLayout.width + 120; // Increased right margin to 50
+                float xPosition = getX() + getWidth() - glyphLayout.width + 150; // Increased right margin to 50
                 float yPosition = getY() + getHeight() - glyphLayout.height + 20;
                 font.draw(batch, glyphLayout, xPosition, yPosition);
                 font.getData().setScale(1.0f);

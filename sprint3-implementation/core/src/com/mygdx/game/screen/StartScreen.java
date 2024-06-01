@@ -82,10 +82,10 @@ public class StartScreen implements Screen {
         } catch(Exception e) {
             System.out.print(e.getMessage());
         }
-        layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 3 to quit game");
+        layout = new GlyphLayout(font, " Options\n Press 1 to start new game\n Press 3 to quit game");
         if (checkSaved) {
             font.getData().setScale(1.25f);
-            layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 2 to open load game" +
+            layout = new GlyphLayout(font, " Options\n Press 1 to start new game\n Press 2 to open load game" +
                     " \n Press 3 to quit game \n **You will have 5 minutes to play, after that we will send a message to warn you**");
             font.getData().setScale(1.0f);
         }
