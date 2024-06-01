@@ -78,14 +78,26 @@ public class ChitCardManager implements ITurnManager {
                 System.out.println(e.getMessage());
             }
 
+            // set current player
+            activePlayerIndex = Integer.parseInt(String.valueOf(yamlData.get("currentPlayer")));
+
             // load the data of ChitCard in yaml file
             List<String> chitCardTypeList = yamlData.get("chitCardType");
             List<String> chitCardNumberList = yamlData.get("chitCardNumber");
+            List<String> chitCardNameFlipped = yamlData.get("chitCardFlipped");
             for (int i = 0; i < chitCardTypeList.size(); i++) {
                 if (chitCardTypeList.get(i).equals("PIRATE_DRAGON")) {
-                    cards.add(new PirateChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this));
+                    PirateChitCard newChitCard = new PirateChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this);
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    cards.add(newChitCard);
+                } else if (chitCardTypeList.get(i).equals("SWAP")) {
+                    SwapChitCard newChitCard =new SwapChitCard(board, this);
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    cards.add(newChitCard);
                 } else {
-                    cards.add(new RegularChitCard(animalTypeMap.get(chitCardTypeList.get(i)), Integer.parseInt(chitCardNumberList.get(i)), board, this));
+                    RegularChitCard newChitCard = new RegularChitCard(animalTypeMap.get(chitCardTypeList.get(i)), Integer.parseInt(chitCardNumberList.get(i)), board, this);
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    cards.add(newChitCard);
                 }
             }
 
@@ -119,18 +131,28 @@ public class ChitCardManager implements ITurnManager {
     public ChitCard[] getChitCards() { return this.chitCards; }
 
     @Override
-    public Map<String, List<String>> save() {
+    public Map<String, List<String>> saveChitCard() {
         HashMap<String, List<String>> chitCardData = new HashMap<>();
         List<String> chitCardType = new ArrayList<>();
         List<String> chitCardNumber = new ArrayList<>();
+        List<String> chitCardFlipped = new ArrayList<>();
 
         for (ChitCard chitCard: chitCards) {
             chitCardType.add(chitCard.getType().toString());
             chitCardNumber.add(String.valueOf(chitCard.getAnimalCount()));
+            chitCardFlipped.add(String.valueOf(chitCard.flipped));
         }
 
         chitCardData.put("chitCardType", chitCardType);
         chitCardData.put("chitCardNumber", chitCardNumber);
+        chitCardData.put("chitCardFlipped", chitCardFlipped);
         return chitCardData;
+    }
+
+    @Override
+    public Map<String, Integer> saveCurrentPlayer() {
+        HashMap<String, Integer> playerData = new HashMap<>();
+        playerData.put("currentPlayer", this.activePlayerIndex);
+        return playerData;
     }
 }
