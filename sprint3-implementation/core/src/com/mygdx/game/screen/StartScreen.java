@@ -84,7 +84,10 @@ public class StartScreen implements Screen {
         }
         layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 3 to quit game");
         if (checkSaved) {
-            layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 2 to open load game \n Press 3 to quit game");
+            font.getData().setScale(1.25f);
+            layout = new GlyphLayout(font, " Option\n Press 1 to start new game\n Press 2 to open load game" +
+                    " \n Press 3 to quit game \n **You will have 5 minutes to play, after that we will send a message to warn you**");
+            font.getData().setScale(1.0f);
         }
 
         // Clear the screen with a dark blue color
