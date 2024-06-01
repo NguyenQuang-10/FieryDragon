@@ -118,6 +118,8 @@ public class PauseScreen implements Screen {
                 yamlData.put("chitCardType", data.get("chitCardType"));
                 yamlData.put("chitCardNumber", data.get("chitCardNumber"));
                 yamlData.put("playerNumber", data.get("playerNumber"));
+                yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
+                yamlData.put("currentPlayer", data.get("currentPlayer"));
 
                 try (FileWriter writer = new FileWriter(path.toFile())) {
                     yaml.dump(yamlData, writer);
