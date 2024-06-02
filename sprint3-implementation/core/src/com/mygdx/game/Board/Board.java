@@ -1,17 +1,14 @@
 package com.mygdx.game.Board;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ChitCards.AnimalType;
 
-import java.io.Console;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
-import com.mygdx.game.screen.GameScreen;
 import org.yaml.snakeyaml.Yaml;
-import java.io.InputStream;
 import java.util.stream.Collectors;
 
 // Class managing state relating to the FieryDragon Board
@@ -48,26 +45,25 @@ public class Board {
      public Board(Player[] players, String mode, Map<String, AnimalType> animalTypeMap) {
           // create yaml object and instantiate variables
           Yaml yaml = new Yaml();
-          List<String> boardData = new ArrayList<>();
+          List<String> boardData;
           List<String> playerPosition = new ArrayList<>();
-          try {
-               // load data from yaml file into a Map object
-               InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-               Map<String, List<String>> yamlData = yaml.load(inputStream);
-               inputStream.close();
+          FileHandle file = Gdx.files.local("save_file.yaml");
+          String yamlString = file.readString();
 
-               // get boardData and playerPosition
-               if (mode.equals("default")) {
-                    boardData = yamlData.get("boardDefault");
+          Map<String, List<String>> yamlData = yaml.load(yamlString);
 
-               } else {
-                    boardData = yamlData.get("boardCustom");
-                    playerPosition = yamlData.get("playerPositionCustom");
-               }
 
-          } catch(Exception e) {
-               System.out.print(e.getMessage());
+
+          // get boardData and playerPosition
+          if (mode.equals("default")) {
+               boardData = yamlData.get("boardDefault");
+
+          } else {
+               boardData = yamlData.get("boardCustom");
+               playerPosition = yamlData.get("playerPositionCustom");
           }
+
+
 
 
 

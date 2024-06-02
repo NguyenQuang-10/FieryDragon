@@ -3,6 +3,7 @@ package com.mygdx.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -13,13 +14,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -108,21 +107,29 @@ public class StartScreen implements Screen {
             game.setScreen(game.beforeGameScreen);
             yamlData.put("load_option", "default");
 
-            try (FileWriter writer = new FileWriter(path.toFile())) {
-                yaml.dump(yamlData, writer);
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
+//            try (FileWriter writer = new FileWriter(path.toFile())) {
+//                yaml.dump(yamlData, writer);
+//            } catch (Exception e) {
+//                System.out.print(e.getMessage());
+//            }
+            String yamlString = yaml.dump(yamlData);
+
+            FileHandle file = Gdx.files.local("save_file.yaml");
+            file.writeString(yamlString, false);
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && checkSaved) {
             game.numberOfPlayers = Integer.parseInt((String) yamlData.get("playerNumber"));
             yamlData.put("load_option", "custom");
 
-            try (FileWriter writer = new FileWriter(path.toFile())) {
-                yaml.dump(yamlData, writer);
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
+//            try (FileWriter writer = new FileWriter(path.toFile())) {
+//                yaml.dump(yamlData, writer);
+//            } catch (Exception e) {
+//                System.out.print(e.getMessage());
+//            }
+            String yamlString = yaml.dump(yamlData);
+
+            FileHandle file = Gdx.files.local("save_file.yaml");
+            file.writeString(yamlString, false);
 
             game.gameScreen = new GameScreen(game);
             game.setScreen(game.gameScreen);

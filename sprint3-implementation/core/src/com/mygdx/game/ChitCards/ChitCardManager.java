@@ -1,5 +1,7 @@
 package com.mygdx.game.ChitCards;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.game.Board.Board;
 import com.mygdx.game.Board.Player;
 import com.mygdx.game.ChitCards.Cards.PirateChitCard;
@@ -7,9 +9,6 @@ import com.mygdx.game.ChitCards.Cards.RegularChitCard;
 import com.mygdx.game.ChitCards.Cards.SwapChitCard;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 // A class that contains a collection of all chit card in the game
@@ -68,15 +67,20 @@ public class ChitCardManager implements ITurnManager {
             // shuffle the generated ChitCards
             Collections.shuffle(cards);
         } else if (mode.equals("custom")) {
-            try {
-                // load yaml file into yamlData
-                Yaml yaml = new Yaml();
-                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-                yamlData = yaml.load(inputStream);
-                inputStream.close();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+//            try {
+//                // load yaml file into yamlData
+//                Yaml yaml = new Yaml();
+//                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
+//                yamlData = yaml.load(inputStream);
+//                inputStream.close();
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+            Yaml yaml = new Yaml();
+            FileHandle file = Gdx.files.local("save_file.yaml");
+            String yamlString = file.readString();
+
+            Map<String, List<String>> yamlData = yaml.load(yamlString);
 
             // set current player
             activePlayerIndex = Integer.parseInt(String.valueOf(yamlData.get("currentPlayer")));

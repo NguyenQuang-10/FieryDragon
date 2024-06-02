@@ -3,6 +3,7 @@ package com.mygdx.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -13,9 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -88,48 +86,42 @@ public class PauseScreen implements Screen {
             game.setScreen(game.beforeGameScreen);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
             // quit and not save
-            try {
-                InputStream inputStream = Files.newInputStream(path);
-                yamlData = yaml.load(inputStream);
-                inputStream.close();
 
-                yamlData.put("saved", false);
-                try (FileWriter writer = new FileWriter(path.toFile())) {
-                    yaml.dump(yamlData, writer);
-                } catch (Exception e) {
-                    System.out.print(e.getMessage());
-                }
-            } catch(Exception e) {
-                System.out.print(e.getMessage());
-            }
+            FileHandle file = Gdx.files.local("save_file.yaml");
+            String yamlString = file.readString();
+
+            yamlData = yaml.load(yamlString);
+            yamlData.put("saved", false);
+
+            yamlString = yaml.dump(yamlData);
+
+            file.writeString(yamlString, false);
+
             Gdx.app.exit();
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             // quit and save
-            try {
-                InputStream inputStream = Files.newInputStream(path);
-                yamlData = yaml.load(inputStream);
-                inputStream.close();
 
-                Map<String, Object> data = saveGameScreen.save();
-                yamlData.put("saved", true);
-                yamlData.put("boardCustom", data.get("boardCustom"));
-                yamlData.put("playerPositionCustom", data.get("playerPositionCustom"));
-                yamlData.put("chitCardType", data.get("chitCardType"));
-                yamlData.put("chitCardNumber", data.get("chitCardNumber"));
-                yamlData.put("playerNumber", data.get("playerNumber"));
-                yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
-                yamlData.put("currentPlayer", data.get("currentPlayer"));
+            FileHandle file = Gdx.files.local("save_file.yaml");
+            String yamlString = file.readString();
 
-                try (FileWriter writer = new FileWriter(path.toFile())) {
-                    yaml.dump(yamlData, writer);
-                } catch (Exception e) {
-                    System.out.print(e.getMessage());
-                }
+            yamlData = yaml.load(yamlString);
 
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
+            Map<String, Object> data = saveGameScreen.save();
+            yamlData.put("saved", true);
+            yamlData.put("boardCustom", data.get("boardCustom"));
+            yamlData.put("playerPositionCustom", data.get("playerPositionCustom"));
+            yamlData.put("chitCardType", data.get("chitCardType"));
+            yamlData.put("chitCardNumber", data.get("chitCardNumber"));
+            yamlData.put("playerNumber", data.get("playerNumber"));
+            yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
+            yamlData.put("currentPlayer", data.get("currentPlayer"));
+
+            yamlString = yaml.dump(yamlData);
+
+            file.writeString(yamlString, false);
+
+            Gdx.app.exit();
             Gdx.app.exit();
         }
     }
