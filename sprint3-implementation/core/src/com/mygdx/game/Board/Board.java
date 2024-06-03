@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.ChitCards.AnimalType;
 
 import java.util.*;
+import java.util.Enumeration;
 
 import org.yaml.snakeyaml.Yaml;
 import java.util.stream.Collectors;
@@ -317,8 +318,13 @@ public class Board {
      // save information to yaml file
      public HashMap<String, List<String>> save() {
           HashMap<String, List<String>> map = new HashMap<>();
+          List<String> cavePosition = new ArrayList<>();
+          for (Cave cave: playerCave.values()){
+               cavePosition.add(String.valueOf(cave.position));
+          }
           map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
           map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
+          map.put("cavePosition",cavePosition);
           return map;
      }
 

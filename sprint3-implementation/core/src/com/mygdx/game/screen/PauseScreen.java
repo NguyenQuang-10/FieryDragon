@@ -116,6 +116,8 @@ public class PauseScreen implements Screen {
             yamlData.put("playerNumber", data.get("playerNumber"));
             yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
             yamlData.put("currentPlayer", data.get("currentPlayer"));
+            yamlData.put("cavePosition", data.get("cavePosition"));
+
 
             yamlString = yaml.dump(yamlData);
 
