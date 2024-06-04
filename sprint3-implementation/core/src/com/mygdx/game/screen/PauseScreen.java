@@ -122,7 +122,6 @@ public class PauseScreen implements Screen {
             file.writeString(yamlString, false);
 
             Gdx.app.exit();
-            Gdx.app.exit();
         }
     }
 
