@@ -101,28 +101,7 @@ public class PauseScreen implements Screen {
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             // quit and save
-
-            FileHandle file = Gdx.files.local("save_file.yaml");
-            String yamlString = file.readString();
-
-            yamlData = yaml.load(yamlString);
-
-            Map<String, Object> data = saveGameScreen.save();
-            yamlData.put("saved", true);
-            yamlData.put("boardCustom", data.get("boardCustom"));
-            yamlData.put("playerPositionCustom", data.get("playerPositionCustom"));
-            yamlData.put("chitCardType", data.get("chitCardType"));
-            yamlData.put("chitCardNumber", data.get("chitCardNumber"));
-            yamlData.put("playerNumber", data.get("playerNumber"));
-            yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
-            yamlData.put("currentPlayer", data.get("currentPlayer"));
-            yamlData.put("cavePosition", data.get("cavePosition"));
-
-
-            yamlString = yaml.dump(yamlData);
-
-            file.writeString(yamlString, false);
-
+            saveGameScreen.save();
             Gdx.app.exit();
         }
     }

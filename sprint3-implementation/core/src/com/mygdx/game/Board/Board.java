@@ -48,7 +48,7 @@ public class Board {
           Yaml yaml = new Yaml();
           List<String> boardData;
           List<String> playerPosition = new ArrayList<>();
-          List<String> cavePosition = new ArrayList<String>();
+          List<String> cavePosition = new ArrayList<>();
 
           FileHandle file = Gdx.files.local("save_file.yaml");
           String yamlString = file.readString();

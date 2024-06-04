@@ -3,6 +3,7 @@ package com.mygdx.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -99,7 +100,7 @@ public class GameScreen implements Screen {
         glyphLayout = new GlyphLayout();
     }
 
-    public Map<String, Object> save() {
+    public void save() {
         HashMap<String, Object> data = new HashMap<>();
 
         Map<String, List<String>> boardData = board.save();
@@ -113,10 +114,16 @@ public class GameScreen implements Screen {
 
         Map<String, Integer> playerData = chitCardManager.saveCurrentPlayer();
         data.put("currentPlayer", playerData.get("currentPlayer"));
-
         data.put("playerNumber", String.valueOf(board.getPlayers().length));
 
-        return data;
+        data.put("saved", true);
+
+        FileHandle file = Gdx.files.local("save_file.yaml");
+        Yaml yaml = new Yaml();
+
+        String yamlString = yaml.dump(data);
+
+        file.writeString(yamlString, false);
     }
 
     // See libGDX documentation
