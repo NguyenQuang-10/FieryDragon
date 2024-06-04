@@ -105,7 +105,7 @@ public class GameScreen implements Screen {
         Map<String, List<String>> boardData = board.save();
         data.put("boardCustom", boardData.get("boardCustom"));
         data.put("playerPositionCustom", boardData.get("playerPositionCustom"));
-
+        data.put("cavePosition", boardData.get("cavePosition"));
         Map<String, List<String>> chitCardData = chitCardManager.saveChitCard();
         data.put("chitCardType", chitCardData.get("chitCardType"));
         data.put("chitCardNumber", chitCardData.get("chitCardNumber"));
