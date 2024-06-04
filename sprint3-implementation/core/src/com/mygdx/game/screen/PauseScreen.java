@@ -14,8 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
 import org.yaml.snakeyaml.Yaml;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 public class PauseScreen implements Screen {
@@ -75,7 +73,6 @@ public class PauseScreen implements Screen {
 
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData;
-        Path path = Paths.get("save_file.yaml");
 
         // Check for key presses to determine action
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
