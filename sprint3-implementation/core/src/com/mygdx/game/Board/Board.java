@@ -47,6 +47,8 @@ public class Board {
           Yaml yaml = new Yaml();
           List<String> boardData;
           List<String> playerPosition = new ArrayList<>();
+          List<String> cavePosition = new ArrayList<>();
+
           FileHandle file = Gdx.files.local("save_file.yaml");
           String yamlString = file.readString();
 
@@ -61,6 +63,7 @@ public class Board {
           } else {
                boardData = yamlData.get("boardCustom");
                playerPosition = yamlData.get("playerPositionCustom");
+               cavePosition = yamlData.get("cavePosition");
           }
 
 
@@ -92,9 +95,9 @@ public class Board {
           // set VolcanoMap and Player
           setVolcanoMap(volcanoPosition);
           if (mode.equals("default")) {
-               setPlayers(players, null);
+               setPlayers(players, null,null);
           } else if (mode.equals("custom")) {
-               setPlayers(players, playerPosition);
+               setPlayers(players, playerPosition,cavePosition);
           }
           startGameTimer();
      }
@@ -250,7 +253,7 @@ public class Board {
      /*
           @param - newPlayers: array of Player object participating in the game
       */
-     protected void setPlayers(Player[] newPlayers, List<String> position) {
+     protected void setPlayers(Player[] newPlayers, List<String> position,List<String> cavePosition) {
           int playerCount = newPlayers.length;
 
           // evenly spaces caves out on the board with randomised animal types
@@ -258,21 +261,24 @@ public class Board {
           AnimalType[] allowedCaveTypes = {AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.SPIDER};
           List<AnimalType> types = Arrays.asList(allowedCaveTypes);
           Collections.shuffle(types);
-
           // generating a cave for each player
           // also randomizing the cave each player starts out on
+
           for(int i = 0; i < playerCount; i++){
                int startLocation = spacing * (i + 1) - 1;
-
                AnimalType randomAniType = types.get(i % playerCount);
-               playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
+               if (cavePosition != null){
+                    playerCave.put(newPlayers[i], new Cave(randomAniType, Integer.parseInt(cavePosition.get(i))));
+               } else {
+                    playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
+               }
                if (position != null) {
                     int currentPosition = Integer.parseInt(position.get(i));
-                    if (currentPosition != startLocation) {
+                    if (currentPosition != Integer.parseInt(cavePosition.get(i))) {
                          newPlayers[i].isInCave = false;
                     }
                     this.playerPositions.put(newPlayers[i], currentPosition);
-                    this.playerDistanceFromCave.put(newPlayers[i], (currentPosition - startLocation + 24) % 24);
+                    this.playerDistanceFromCave.put(newPlayers[i], (currentPosition -  Integer.parseInt(cavePosition.get(i)) + 1 + 24) % 24);
                } else {
                     this.playerPositions.put(newPlayers[i], startLocation);
                     this.playerDistanceFromCave.put(newPlayers[i], 0);
@@ -311,8 +317,13 @@ public class Board {
      // save information to yaml file
      public HashMap<String, List<String>> save() {
           HashMap<String, List<String>> map = new HashMap<>();
+          List<String> cavePosition = new ArrayList<>();
+          for (Cave cave: playerCave.values()){
+               cavePosition.add(String.valueOf(cave.position));
+          }
           map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
           map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
+          map.put("cavePosition",cavePosition);
           return map;
      }
 

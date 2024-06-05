@@ -14,8 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.FieryDragonGame;
 import org.yaml.snakeyaml.Yaml;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 public class PauseScreen implements Screen {
@@ -75,7 +73,6 @@ public class PauseScreen implements Screen {
 
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData;
-        Path path = Paths.get("save_file.yaml");
 
         // Check for key presses to determine action
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
@@ -101,27 +98,7 @@ public class PauseScreen implements Screen {
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             // quit and save
-
-            FileHandle file = Gdx.files.local("save_file.yaml");
-            String yamlString = file.readString();
-
-            yamlData = yaml.load(yamlString);
-
-            Map<String, Object> data = saveGameScreen.save();
-            yamlData.put("saved", true);
-            yamlData.put("boardCustom", data.get("boardCustom"));
-            yamlData.put("playerPositionCustom", data.get("playerPositionCustom"));
-            yamlData.put("chitCardType", data.get("chitCardType"));
-            yamlData.put("chitCardNumber", data.get("chitCardNumber"));
-            yamlData.put("playerNumber", data.get("playerNumber"));
-            yamlData.put("chitCardFlipped", data.get("chitCardFlipped"));
-            yamlData.put("currentPlayer", data.get("currentPlayer"));
-
-            yamlString = yaml.dump(yamlData);
-
-            file.writeString(yamlString, false);
-
-            Gdx.app.exit();
+            saveGameScreen.save();
             Gdx.app.exit();
         }
     }
