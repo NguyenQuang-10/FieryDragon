@@ -105,19 +105,18 @@ public class ChitCardManager implements ITurnManager {
             List<String> chitCardNumberList = yamlData.get("chitCardNumber");
             List<String> chitCardNameFlipped = yamlData.get("chitCardFlipped");
             for (int i = 0; i < chitCardTypeList.size(); i++) {
+                ChitCard newChitCard;
                 if (chitCardTypeList.get(i).equals("PIRATE_DRAGON")) {
-                    PirateChitCard newChitCard = new PirateChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
-                    cards.add(newChitCard);
+                    newChitCard = new PirateChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this);
                 } else if (chitCardTypeList.get(i).equals("SWAP")) {
-                    SwapChitCard newChitCard =new SwapChitCard(board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
-                    cards.add(newChitCard);
+                    newChitCard = new SwapChitCard(board, this);
+                } else if (chitCardTypeList.get(i).equals("TRAP")) {
+                    newChitCard = new TrapChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this);
                 } else {
-                    RegularChitCard newChitCard = new RegularChitCard(animalTypeMap.get(chitCardTypeList.get(i)), Integer.parseInt(chitCardNumberList.get(i)), board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
-                    cards.add(newChitCard);
+                    newChitCard = new RegularChitCard(animalTypeMap.get(chitCardTypeList.get(i)), Integer.parseInt(chitCardNumberList.get(i)), board, this);
                 }
+                newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
+                cards.add(newChitCard);
             }
 
         }
