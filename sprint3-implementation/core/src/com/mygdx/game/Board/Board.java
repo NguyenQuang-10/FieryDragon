@@ -141,14 +141,17 @@ public class Board {
 
           if (newPosition < 0) {
                newPosition = this.length - (Math.abs(newPosition) % this.length );
-               System.out.println(newPosition);
           }
 
           // the cave that belongs to the current player
           Cave currPlayerCave = playerCave.get(player);
 
-          // if the player is in their cave, move them out
-          if (player.isInCave && moves > 0) {
+          // if the player is in their cave, move them out if the number of moves is positive
+          if (player.isInCave) {
+               if (moves <= 0) {
+                    return false;
+               }
+
                // perform checks to see if moving to the new position is illegal
                int playerCount = playerCave.size();
                Player[] players = playerCave.keySet().toArray(new Player[playerCount]);
@@ -272,7 +275,7 @@ public class Board {
                } else {
                     playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
                }
-               if (position != null) {
+               if (position != null ) {
                     int currentPosition = Integer.parseInt(position.get(i));
                     if (currentPosition != Integer.parseInt(cavePosition.get(i))) {
                          newPlayers[i].isInCave = false;
