@@ -20,22 +20,23 @@ public class ChitCardManagerUI extends Group {
     final private ChitCardManager manager;
 
     // max number of chit cards in a row
-    final private int maxWidth;
+    final private int maxColumn;
 
     // max number of rows of chit cards
-    final private int maxHeight;
+    final private int maxRow;
     // maps ChitCard instance to their corresponding sprite
     final private HashMap<ChitCard, Texture> chitCardSprites = new HashMap<>();
 
+
     // Constructor
     public ChitCardManagerUI(float x, float y,
-                             int maxWidth, int maxHeight,
                              Board board,
                              ChitCardManager manager) {
         this.manager = manager;
         manager.generateChitCards(board);
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
+        int chitCardCount = manager.getChitCards().length;
+        this.maxColumn = (int) Math.ceil(Math.sqrt(chitCardCount));
+        this.maxRow = (chitCardCount / maxColumn) + 1;
         setX(x);
         setY(y);
 
@@ -62,10 +63,10 @@ public class ChitCardManagerUI extends Group {
             Texture sprite = chitCardSprites.get(chit);
             ChitCardUI actor = new ChitCardUI(xOffset, yOffset, sprite, chit, manager);
             addActor(actor);
-            if (currCol < maxWidth) {
+            if (currCol < maxColumn) {
                 xOffset += sprite.getWidth() + GUTTER_PX;
                 currCol += 1;
-            } else if (currRow < maxHeight) {
+            } else if (currRow < maxRow) {
                 xOffset = getX();
                 yOffset += sprite.getHeight() + GUTTER_PX;
 
@@ -89,6 +90,7 @@ public class ChitCardManagerUI extends Group {
         filePrefixes.put(AnimalType.SPIDER, "spider");
         filePrefixes.put(AnimalType.PIRATE_DRAGON, "pirateDragon");
         filePrefixes.put(AnimalType.SWAP, "swap");
+        filePrefixes.put(AnimalType.TRAP, "trap");
 
         for (ChitCard chit : chitCards) {
             String filePrefix = filePrefixes.get(chit.getType());

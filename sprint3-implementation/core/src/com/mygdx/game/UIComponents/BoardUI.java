@@ -45,6 +45,7 @@ public class BoardUI extends FieryDragonUI {
     final private ShapeRenderer shape;
     final private BitmapFont font;
     final private GlyphLayout glyphLayout;
+    private Map<Player, Integer> trappedPlayer;
 
     // Constructor
     public BoardUI(float x, float y,
@@ -55,6 +56,7 @@ public class BoardUI extends FieryDragonUI {
         super(turnManager);
         this.board = board;
         this.turnManager = turnManager;
+        trappedPlayer = turnManager.getTrappedPlayer();
         AnimalType[] volcanoMap = this.board.getVolcanoMap();
         int playerCount = this.board.getPlayers().length;
 
@@ -97,13 +99,13 @@ public class BoardUI extends FieryDragonUI {
     }
 
     private void drawText(Batch batch) {
-        String message;
+        StringBuilder message = new StringBuilder();
 
         if (board.hasGameEnded()) {
             if (board.hasTimeLimitReached()) {
-                message = "You have reached the time limit,\npress 0 to pause the game please!";
+                message = new StringBuilder("You have reached the time limit,\npress 0 to pause the game please!");
                 font.getData().setScale(1.5f);
-                glyphLayout.setText(font, message);
+                glyphLayout.setText(font, message.toString());
                 // Calculate the x position for right alignment
                 // Increase the right margin for further right alignment
                 float xPosition = getX() + getWidth() - glyphLayout.width + 150; // Increased right margin to 50
@@ -112,22 +114,28 @@ public class BoardUI extends FieryDragonUI {
                 font.getData().setScale(1.0f);
                 return;
             } else {
-                message = String.format("%s Won!!!", currentActivePlayer.getName());
+                message = new StringBuilder(String.format("%s Won!!!", currentActivePlayer.getName()));
             }
         } else {
             if (isWaitingForTurnEnd()) {
-                message = "Turn Ended!";
+                message = new StringBuilder(String.format("%s's turn has ended!!\n", currentActivePlayer.getName()));
             } else {
-                message = String.format("%s's Turn", currentActivePlayer.getName());
+                for (Player p: trappedPlayer.keySet()) {
+                    int trappedTurns = trappedPlayer.get(p);
+                    if (trappedTurns > 0) {
+                        message.append(String.format("%s's is trapped for next %d turns\n", p.getName(), trappedTurns));
+                    }
+                }
+                message.append(String.format("\nIt is now %s's turn\n", currentActivePlayer.getName()));
             }
         }
 
         // Set the text for the current state
-        glyphLayout.setText(font, message);
+        glyphLayout.setText(font, message.toString());
         // Draw the text for the current state
         // Ensure this is only drawn if the game has not ended due to time limit
         if (!board.hasTimeLimitReached()) {
-            font.draw(batch, glyphLayout, getX() - glyphLayout.width - 5, getY());
+            font.draw(batch, glyphLayout, getX() - glyphLayout.width/2, getY());
         }
     }
 
@@ -298,6 +306,7 @@ public class BoardUI extends FieryDragonUI {
 
     @Override
     public void endTurnChange() {
+        trappedPlayer = turnManager.getTrappedPlayer();
         super.endTurnChange();
     }
 }

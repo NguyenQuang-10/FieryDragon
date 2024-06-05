@@ -7,6 +7,7 @@ import com.mygdx.game.Board.Player;
 import com.mygdx.game.ChitCards.Cards.PirateChitCard;
 import com.mygdx.game.ChitCards.Cards.RegularChitCard;
 import com.mygdx.game.ChitCards.Cards.SwapChitCard;
+import com.mygdx.game.ChitCards.Cards.TrapChitCard;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
@@ -26,12 +27,21 @@ public class ChitCardManager implements ITurnManager {
     String mode;
     HashMap<String, List<String>> yamlData;
 
+    // player is trapped if they're turn is skipped because they select a Trap Chit Card
+    // this maps the player to the number of turn being skipped
+    // if player is not trapped, then the number of turn they have to wait is 0
+    private final HashMap<Player, Integer> playerTrappedTurnRemaining = new LinkedHashMap<>();
+
     // Constructor
     public ChitCardManager(Player[] players, String mode, Map<String, AnimalType> animalTypeMap){
         this.players = players;
         this.activePlayerIndex = 0;
         this.mode = mode;
         this.animalTypeMap = animalTypeMap;
+
+        for (Player p: players) {
+            playerTrappedTurnRemaining.put(p, 0);
+        }
     }
 
     // Generate 16 chit card that follows the base game rules
@@ -43,10 +53,11 @@ public class ChitCardManager implements ITurnManager {
         if (mode.equals("default")) {
             // create an array of animalTypes
             AnimalType[] animalTypes = animalTypeMap.values().toArray(new AnimalType[0]);
+            EnumSet<AnimalType> regularAnimalTypes = EnumSet.of(AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SPIDER, AnimalType.SALAMANDER);
 
             // generate the ChitCards sequentially and add regular ChitCard to the board
             for (AnimalType animalType : animalTypes) {
-                if (animalType != AnimalType.PIRATE_DRAGON && animalType != AnimalType.SWAP) {
+                if (regularAnimalTypes.contains(animalType)) {
                     for (int aCount = 1; aCount <= 3; aCount++) {
                         ChitCard card = new RegularChitCard(animalType, aCount, board, this);
                         cards.add(card);
@@ -59,6 +70,10 @@ public class ChitCardManager implements ITurnManager {
                 cards.add(new PirateChitCard(i, board, this));
                 cards.add(new PirateChitCard(i, board, this));
             }
+
+            // generate the TRAP chit card
+            cards.add(new TrapChitCard(1, board, this));
+            cards.add(new TrapChitCard(2, board, this));
 
             cards.add(new SwapChitCard(board, this));
             cards.add(new SwapChitCard(board, this));
@@ -92,15 +107,15 @@ public class ChitCardManager implements ITurnManager {
             for (int i = 0; i < chitCardTypeList.size(); i++) {
                 if (chitCardTypeList.get(i).equals("PIRATE_DRAGON")) {
                     PirateChitCard newChitCard = new PirateChitCard(Integer.parseInt(chitCardNumberList.get(i)), board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
                     cards.add(newChitCard);
                 } else if (chitCardTypeList.get(i).equals("SWAP")) {
                     SwapChitCard newChitCard =new SwapChitCard(board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
                     cards.add(newChitCard);
                 } else {
                     RegularChitCard newChitCard = new RegularChitCard(animalTypeMap.get(chitCardTypeList.get(i)), Integer.parseInt(chitCardNumberList.get(i)), board, this);
-                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));;
+                    newChitCard.flipped = Boolean.parseBoolean(chitCardNameFlipped.get(i));
                     cards.add(newChitCard);
                 }
             }
@@ -114,11 +129,24 @@ public class ChitCardManager implements ITurnManager {
 
     // Perform operations to end the turn by resetting all chit cards
     public void endTurn() {
-        this.activePlayerIndex = (activePlayerIndex + 1) % this.players.length;
+        // the players whose turn are going to get skip following this turn
+        activePlayerIndex = (activePlayerIndex + 1) % players.length;
+        Player nextPlayer = players[activePlayerIndex];
+        int nextPlayerTrappedTurn = playerTrappedTurnRemaining.get(nextPlayer);
+        while (nextPlayerTrappedTurn > 0) {
+            playerTrappedTurnRemaining.put(nextPlayer, nextPlayerTrappedTurn - 1);
+
+            activePlayerIndex = (activePlayerIndex + 1) % players.length;
+            nextPlayer = players[activePlayerIndex];
+            nextPlayerTrappedTurn = playerTrappedTurnRemaining.get(nextPlayer);
+        }
+
         for (ChitCard chitCard : chitCards) {
             chitCard.resetFlipState();
         }
     }
+
+
 
     // see ITurnManager
     public Player getActivePlayer() {
@@ -159,4 +187,27 @@ public class ChitCardManager implements ITurnManager {
         playerData.put("currentPlayer", this.activePlayerIndex);
         return playerData;
     }
+
+    // skip a number of the following turns for a player
+    // @params
+    //  numberOfTurn (int) : the number of turns to skip
+    //  player (Player) : the player whose turn we're skipping
+    @Override
+    public void trapPlayerTurn(int numberOfTurn, Player player) {
+        if (numberOfTurn > 0) {
+            playerTrappedTurnRemaining.put(player, numberOfTurn);
+        }
+    }
+
+    // Return a map that contain the player whose turn are getting skipped
+    // and how many turn they're getting skipped for
+    public Map<Player, Integer> getTrappedPlayer() {
+        // cloning the map and returning it
+        Map<Player, Integer> returnMap = new LinkedHashMap<>();
+        for (Player p: playerTrappedTurnRemaining.keySet()) {
+            returnMap.put(p, playerTrappedTurnRemaining.get(p));
+        }
+        return returnMap;
+    }
+
 }
