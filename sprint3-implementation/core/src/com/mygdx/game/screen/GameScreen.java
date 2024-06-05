@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Board.Board;
 import com.mygdx.game.ChitCards.ChitCardManager;
@@ -93,8 +94,8 @@ public class GameScreen implements Screen {
 
 
         chitCardManager = new ChitCardManager(players, load_option, animalTypeMap);
-        boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
-        chitCardManagerUI = new ChitCardManagerUI(330, 170, board, chitCardManager);
+        boardUI = new BoardUI(170, 690, board, chitCardManager);
+        chitCardManagerUI = new ChitCardManagerUI(350, 160, board, chitCardManager);
 
         font = new BitmapFont();
         batch = new SpriteBatch();
@@ -133,7 +134,7 @@ public class GameScreen implements Screen {
         stage = new Stage();
         stage.addActor(boardUI);
         stage.addActor(chitCardManagerUI);
-        stage.setViewport(new StretchViewport(game.WIDTH, game.HEIGHT));
+        stage.setViewport(new FitViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
         pauseText = new GlyphLayout(font, "Press 0 to pause the game ");
 
@@ -156,7 +157,7 @@ public class GameScreen implements Screen {
         batch.begin();
         // Calculate the position to draw the text centered o
         float drawX = 100;
-        float drawY = game.HEIGHT / 2f + pauseText.height / 2f;
+        float drawY = stage.getViewport().getWorldHeight() / 2f + pauseText.height / 2f;
         // Draw the text on the screen
         font.draw(batch, pauseText, drawX, drawY);
         batch.end();

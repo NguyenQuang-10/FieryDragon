@@ -27,10 +27,8 @@ public class BoardUI extends FieryDragonUI {
     Board board;
     private boolean isGameStart = true;
 
-    // height of the rectangular board (how many volcano square)
-    final private int boardHeight;
-    // width of the rectangular board (how many volcano square)
-    final private int boardWidth;
+    // if board was a square, how long (how many tiles) would each side be
+    private int boardSideLength;
 
     // number of pixel in between each volcano sprite
     final private int GUTTER_PX_SIZE = 20;
@@ -47,35 +45,29 @@ public class BoardUI extends FieryDragonUI {
     final private GlyphLayout glyphLayout;
     private Map<Player, Integer> trappedPlayer;
 
+    private float spriteScale;
+
+    private float estimatedHeight = 0;
+    private float estimatedWidth = 0;
     // Constructor
     public BoardUI(float x, float y,
-                   int boardWidth, int boardHeight,
                    Board board,
                    ITurnManager turnManager
     ) {
         super(turnManager);
+
         this.board = board;
         this.turnManager = turnManager;
         trappedPlayer = turnManager.getTrappedPlayer();
         AnimalType[] volcanoMap = this.board.getVolcanoMap();
         int playerCount = this.board.getPlayers().length;
 
-        // sanity checks
-        if (volcanoMap.length != boardHeight * 2 + boardWidth * 2 - 4) {
-            throw new RuntimeException("[Board] Volcano map doesn't match board dimension");
-        }
-
-        if (playerCount == 0 || playerCount > 4) {
-            throw new RuntimeException("[Board] Invalid number of player, please ensure there are 2-4 players");
-        }
-
-        this.boardHeight = boardHeight;
-        this.boardWidth = boardWidth;
-
         // load sprites
         loadVolcanoSprites();
         loadCaveSprites();
         loadPlayerSprites();
+
+        this.boardSideLength = board.getVolcanoMap().length / 4;
 
         this.shape = new ShapeRenderer();
         this.glyphLayout = new GlyphLayout();
@@ -135,7 +127,7 @@ public class BoardUI extends FieryDragonUI {
         // Draw the text for the current state
         // Ensure this is only drawn if the game has not ended due to time limit
         if (!board.hasTimeLimitReached()) {
-            font.draw(batch, glyphLayout, getX() - glyphLayout.width/2, getY());
+            font.draw(batch, glyphLayout, getX(), getY());
         }
     }
 
@@ -148,6 +140,7 @@ public class BoardUI extends FieryDragonUI {
         playerSprites[2] = new Texture(Gdx.files.internal("Players\\playerBlue.png"));
         playerSprites[3] = new Texture(Gdx.files.internal("Players\\playerYellow.png"));
     }
+
 
     /*
         Load sprites for each player type
@@ -191,7 +184,7 @@ public class BoardUI extends FieryDragonUI {
             Texture sprite = playerSprites[i];
             Color color = getColor();
             batch.setColor(color.r, color.b, color.g, color.a * 0.5f);
-            batch.draw(sprite, drawCoor.x, drawCoor.y);
+            batch.draw(sprite, drawCoor.x, drawCoor.y, sprite.getWidth() * spriteScale, sprite.getHeight() * spriteScale);
             batch.setColor(color.r, color.b, color.g, color.a);
         }
 
@@ -207,9 +200,9 @@ public class BoardUI extends FieryDragonUI {
         shape.begin(ShapeRenderer.ShapeType.Filled);
         shape.setColor(Color.CYAN);
 
-        float lineWidth = 10;
-        float spWidth = sprite.getWidth();
-        float spHeight = sprite.getHeight();
+        float lineWidth = 10 * spriteScale;
+        float spWidth = sprite.getWidth() * spriteScale;
+        float spHeight = sprite.getHeight() * spriteScale;
         shape.rectLine(hlCoor.x, hlCoor.y, hlCoor.x, hlCoor.y + spHeight, lineWidth);
         shape.rectLine(hlCoor.x + spWidth, hlCoor.y, hlCoor.x + spWidth, hlCoor.y + spHeight, lineWidth);
         shape.rectLine(hlCoor.x, hlCoor.y, hlCoor.x + spWidth, hlCoor.y, lineWidth);
@@ -217,6 +210,21 @@ public class BoardUI extends FieryDragonUI {
         shape.end();
 
         batch.begin();
+    }
+
+    private void drawTileAt(AnimalType[] tileMap, int index, Batch batch, float x, float y) {
+        AnimalType volcanoType = tileMap[index];
+        Texture volcanoSprite = volcanoSprites.get(volcanoType);
+//        batch.draw(volcanoSprite, x, y);
+        batch.draw(volcanoSprite, x, y , volcanoSprite.getWidth() * spriteScale, volcanoSprite.getHeight() * spriteScale);
+    }
+
+    private float getSpriteWidthForTileAt(AnimalType[] tileMap, int index) {
+        return volcanoSprites.get(tileMap[index]).getWidth();
+    }
+
+    private float getSpriteHeightForTileAt(AnimalType[] tileMap, int index) {
+        return volcanoSprites.get(tileMap[index]).getHeight();
     }
 
     /*
@@ -229,38 +237,78 @@ public class BoardUI extends FieryDragonUI {
         float yOffset = getX();
         float xOffset = getY();
 
-        int bottomLim = this.boardWidth - 1; // volcanoMap[0..bottomLim] are volcanoes on the bottom row
-        int rightLim = bottomLim + (this.boardHeight - 2); // volcanoMap[bottomLim..rightLim] are volcanoes on the right
-        int topLim = rightLim + this.boardWidth; // same logic
-        // leftLim is just whatever that haven't been iterated across
+        int numberOfFillableCorner = volcanoMap.length % 4;
+        int currentIndex = 0;
 
-        for (int i = 0; i < volcanoMap.length; i++ ){
-            AnimalType volcanoType = volcanoMap[i];
-            Texture volcanoSprite = volcanoSprites.get(volcanoType);
-            batch.draw(volcanoSprite, xOffset, yOffset);
-
+        for (int i = 0; i < boardSideLength; i++) {
             positionCoorMap.put(i, new Coordinate(xOffset, yOffset));
-
-            if (i <= bottomLim) { // drawing the bottom side
-                // if this is the last sprite in the bottom side, reposition offset for right side
-                if (i == bottomLim) {
-                    yOffset += volcanoSprite.getHeight() + GUTTER_PX_SIZE;
-                } else {
-                    xOffset += volcanoSprite.getWidth() + GUTTER_PX_SIZE;
-                }
-
-            } else if (i <= rightLim ) { // drawing the right side
-                yOffset += volcanoSprite.getHeight() + GUTTER_PX_SIZE;
-            } else if (i <= topLim) {
-                if (i == topLim) {
-                    yOffset -= volcanoSprite.getHeight() + GUTTER_PX_SIZE;
-                } else {
-                    xOffset -= volcanoSprite.getWidth() + GUTTER_PX_SIZE;
-                }
-            } else {
-                yOffset -= volcanoSprite.getHeight() + GUTTER_PX_SIZE;
-            }
+            drawTileAt(volcanoMap, i, batch, xOffset, yOffset);
+            xOffset += (getSpriteWidthForTileAt(volcanoMap, i) + GUTTER_PX_SIZE)*spriteScale;
+            currentIndex = i;
         }
+
+        estimatedWidth = xOffset * ((boardSideLength + 4f)/(boardSideLength));
+        currentIndex += 1;
+
+        if (numberOfFillableCorner > 0) {
+            numberOfFillableCorner -= 1;
+
+            drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
+            currentIndex += 1;
+        }
+
+        yOffset += (getSpriteHeightForTileAt(volcanoMap, currentIndex - 1) + GUTTER_PX_SIZE)*spriteScale;
+
+        for (int i = currentIndex; i < currentIndex + boardSideLength; i++) {
+            positionCoorMap.put(i, new Coordinate(xOffset, yOffset));
+            drawTileAt(volcanoMap, i, batch, xOffset, yOffset);
+            yOffset += (getSpriteHeightForTileAt(volcanoMap, i) + GUTTER_PX_SIZE) * spriteScale;
+        }
+        estimatedHeight = yOffset * ((boardSideLength + 4f)/(boardSideLength));
+        spriteScale = (getStage().getViewport().getWorldHeight() )/ estimatedHeight;
+
+        currentIndex += boardSideLength;
+
+        if (numberOfFillableCorner > 0) {
+            numberOfFillableCorner -= 1;
+
+            drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
+            currentIndex += 1;
+        }
+
+        xOffset -= (getSpriteWidthForTileAt(volcanoMap, currentIndex - 1) + GUTTER_PX_SIZE) * spriteScale;
+
+        for (int i = currentIndex; i < currentIndex + boardSideLength; i++) {
+            positionCoorMap.put(i, new Coordinate(xOffset, yOffset));
+            drawTileAt(volcanoMap, i, batch, xOffset, yOffset);
+            xOffset -= (getSpriteWidthForTileAt(volcanoMap, i) + GUTTER_PX_SIZE) * spriteScale;
+        }
+
+        currentIndex += boardSideLength;
+
+        if (numberOfFillableCorner > 0) {
+            numberOfFillableCorner -= 1;
+
+            drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
+            currentIndex += 1;
+        }
+
+        yOffset -= (getSpriteHeightForTileAt(volcanoMap, currentIndex - 1) + GUTTER_PX_SIZE) * spriteScale;
+
+        for (int i = currentIndex; i < currentIndex + boardSideLength; i++) {
+            positionCoorMap.put(i, new Coordinate(xOffset, yOffset));
+            drawTileAt(volcanoMap, i, batch, xOffset, yOffset);
+            yOffset -= (getSpriteHeightForTileAt(volcanoMap, i) + GUTTER_PX_SIZE) * spriteScale;
+        }
+
+        currentIndex += boardSideLength;
+
+        if (numberOfFillableCorner > 0) {
+            numberOfFillableCorner -= 1;
+
+            drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
+        }
+
     }
 
     /*
@@ -270,9 +318,9 @@ public class BoardUI extends FieryDragonUI {
     private void drawCaves(Batch batch) {
         Cave[] caves = board.getCaves();
 
-        int bottomLim = this.boardWidth - 1; // volcanoMap[0..bottomLim] are volcanoes on the bottom row
-        int rightLim = bottomLim + (this.boardHeight - 2); // volcanoMap[bottomLim..rightLim] are volcanoes on the right
-        int topLim = rightLim + this.boardWidth; // same logic
+        int bottomLim = this.boardSideLength; // volcanoMap[0..bottomLim] are volcanoes on the bottom row
+        int rightLim = bottomLim + (this.boardSideLength); // volcanoMap[bottomLim..rightLim] are volcanoes on the right
+        int topLim = rightLim + this.boardSideLength; // same logic
         // leftLim is just whatever that haven't been iterated across
 
 
@@ -284,17 +332,17 @@ public class BoardUI extends FieryDragonUI {
             float y = coor.y;
 
             if (currCave.position <= bottomLim) {
-                y -= sprite.getHeight() + GUTTER_PX_SIZE;
+                y -= (sprite.getHeight() + GUTTER_PX_SIZE)* spriteScale;
             } else if (currCave.position <= rightLim) {
-                x += sprite.getWidth() + GUTTER_PX_SIZE;
+                x += (sprite.getWidth() + GUTTER_PX_SIZE) * spriteScale;
             } else if (currCave.position <= topLim) {
-                y += sprite.getHeight() + GUTTER_PX_SIZE;
+                y += (sprite.getHeight() + GUTTER_PX_SIZE) * spriteScale;
             } else {
-                x -= sprite.getWidth() + GUTTER_PX_SIZE;
+                x -= (sprite.getWidth() + GUTTER_PX_SIZE) * spriteScale;
             }
 
             caveCoorMap.put(currCave, new Coordinate(x, y));
-            batch.draw(sprite, x, y);
+            batch.draw(sprite, x, y, sprite.getWidth() * spriteScale, sprite.getHeight() * spriteScale);
         }
 
     }
