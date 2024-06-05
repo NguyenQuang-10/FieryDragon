@@ -1,20 +1,18 @@
-saved: true
-load_option: default
+chitCardType: [SWAP, BABY_DRAGON, SALAMANDER, BABY_DRAGON, BAT, PIRATE_DRAGON, SPIDER,
+  PIRATE_DRAGON, PIRATE_DRAGON, TRAP, BABY_DRAGON, SALAMANDER, SPIDER, SPIDER, TRAP,
+  SALAMANDER, BAT, BAT, SWAP, PIRATE_DRAGON]
 playerNumber: '4'
-boardDefault: [BABY_DRAGON, BAT, SPIDER, SPIDER, BAT, SALAMANDER, SALAMANDER, SPIDER,
+boardCustom: [BABY_DRAGON, BAT, SPIDER, SPIDER, BAT, SALAMANDER, SALAMANDER, SPIDER,
   BAT, BABY_DRAGON, SALAMANDER, BAT, SPIDER, SALAMANDER, BABY_DRAGON, BAT, BABY_DRAGON,
   SALAMANDER, BAT, SPIDER, BABY_DRAGON, SALAMANDER, BABY_DRAGON, SPIDER]
-boardCustom: [SPIDER, BAT, BABY_DRAGON, SALAMANDER, BAT, SPIDER, SALAMANDER, SPIDER,
-  BAT, BABY_DRAGON, SALAMANDER, BAT, SPIDER, SALAMANDER, BABY_DRAGON, BAT, BABY_DRAGON,
-  SALAMANDER, BABY_DRAGON, SPIDER, BAT, SPIDER, BABY_DRAGON, SALAMANDER]
-playerPositionCustom: ['5', '13', '17', '23']
-chitCardType: [PIRATE_DRAGON, PIRATE_DRAGON, SWAP, SPIDER, BAT, BABY_DRAGON, SWAP,
-  PIRATE_DRAGON, SPIDER, SALAMANDER, BAT, BABY_DRAGON, SPIDER, PIRATE_DRAGON, BABY_DRAGON,
-  SALAMANDER, SALAMANDER, BAT]
-chitCardNumber: ['1', '2', '0', '3', '3', '2', '0', '2', '2', '3', '2', '1', '1',
-  '1', '3', '2', '1', '1']
+playerPositionCustom: ['17', '10', '13', '22']
+currentPlayer: 0
+saved: true
+volcanoCardSize: ['3']
+cavePosition: ['5', '11', '17', '23']
 chitCardFlipped: ['false', 'false', 'false', 'false', 'false', 'false', 'false', 'false',
-  'false', 'false', 'true', 'false', 'false', 'false', 'false', 'false', 'false',
-  'false']
-currentPlayer: 1
-cavePosition: ['1', '2', '3', '4']
+  'false', 'false', 'false', 'false', 'false', 'false', 'false', 'false', 'false',
+  'false', 'false', 'false']
+chitCardNumber: ['0', '1', '1', '3', '2', '1', '1', '2', '1', '2', '2', '2', '2',
+  '3', '1', '3', '1', '3', '0', '2']
+load_option: custom

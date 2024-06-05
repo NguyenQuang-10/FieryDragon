@@ -25,6 +25,7 @@ public class Board {
 
      // map linking player to the cave that belongs to them
      Map<Player, Integer> playerPositions = new LinkedHashMap<>();
+     List<VolcanoCard> volcanoCards = new ArrayList<>();
 
      // an array of AnimalType that represent type of volcano squares on the board
      // volcanoMap[i] is the type of volcano at location i on the board
@@ -36,6 +37,14 @@ public class Board {
      int length;
      // there has been a winner if this is true
      boolean gameEnded = false;
+     int volcanoCardSize = 3;
+
+     protected static AnimalType[] defaultBoardArrangement = {AnimalType.BABY_DRAGON, AnimalType.BAT, AnimalType.SPIDER,
+             AnimalType.SPIDER, AnimalType.BAT, AnimalType.SALAMANDER, AnimalType.SALAMANDER, AnimalType.SPIDER,
+             AnimalType.BAT, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SPIDER,
+             AnimalType.SALAMANDER, AnimalType.BABY_DRAGON, AnimalType.BAT, AnimalType.BABY_DRAGON,
+             AnimalType.SALAMANDER, AnimalType.BAT, AnimalType.SPIDER, AnimalType.BABY_DRAGON, AnimalType.SALAMANDER,
+             AnimalType.BABY_DRAGON, AnimalType.SPIDER};
 
      // configure initial board state
      /*
@@ -54,46 +63,38 @@ public class Board {
 
           Map<String, List<String>> yamlData = yaml.load(yamlString);
 
-
+          // render the board using VolcanoCard
+          AnimalType[] tileTypeMap;
 
           // get boardData and playerPosition
           if (mode.equals("default")) {
-               boardData = yamlData.get("boardDefault");
+               tileTypeMap = Board.defaultBoardArrangement;
 
           } else {
                boardData = yamlData.get("boardCustom");
                playerPosition = yamlData.get("playerPositionCustom");
                cavePosition = yamlData.get("cavePosition");
+               volcanoCardSize = Integer.parseInt(yamlData.get("volcanoCardSize").get(0));
+
+               tileTypeMap = new AnimalType[boardData.size()];
+
+               for (int i = 0; i < boardData.size(); i++) {
+                    tileTypeMap[i] = animalTypeMap.get(boardData.get(i));
+               }
           }
 
-
-
-
-
-
-          // render the board using VolcanoCard
-          AnimalType[] volcanoPosition = new AnimalType[boardData.size()];
-          for (int i = 0; i < boardData.size() / 3; i++) {
-               AnimalType animalType1 = animalTypeMap.get(boardData.get(i * 3));
-               AnimalType animalType2 = animalTypeMap.get(boardData.get(i * 3 + 1));
-               AnimalType animalType3 = animalTypeMap.get(boardData.get(i * 3 + 2));
-               if (mode.equals("default")) {
-                    VolcanoCard volcanoCard = new VolcanoCard(animalType1, animalType2, animalType3);
-
-                    Array<AnimalType> animalTypes = volcanoCard.getTypes();
-                    volcanoPosition[i*3] = animalTypes.get(0);
-                    volcanoPosition[i*3+1] = animalTypes.get(1);
-                    volcanoPosition[i*3+2] = animalTypes.get(2);
-               } else {
-                    volcanoPosition[i*3] = animalType1;
-                    volcanoPosition[i*3+1] = animalType2;
-                    volcanoPosition[i*3+2] = animalType3;
+          for (int i = 0; i < tileTypeMap.length / volcanoCardSize; i++) {
+               AnimalType[] tiles = new AnimalType[volcanoCardSize];
+               for (int tileNo = 0; tileNo < volcanoCardSize; tileNo++) {
+                    tiles[tileNo] = tileTypeMap[i*volcanoCardSize + tileNo];
                }
+               VolcanoCard volcanoCard = new VolcanoCard(tiles);
+               volcanoCards.add(volcanoCard);
 
           }
 
           // set VolcanoMap and Player
-          setVolcanoMap(volcanoPosition);
+          setVolcanoMap(tileTypeMap);
           if (mode.equals("default")) {
                setPlayers(players, null,null);
           } else if (mode.equals("custom")) {
@@ -271,8 +272,20 @@ public class Board {
                int startLocation = spacing * (i + 1) - 1;
                AnimalType randomAniType = types.get(i % playerCount);
                if (cavePosition != null){
-                    playerCave.put(newPlayers[i], new Cave(randomAniType, Integer.parseInt(cavePosition.get(i))));
+                    int cavePos = Integer.parseInt(cavePosition.get(i));
+                    int belongToVolcanoCardAt = cavePos / volcanoCardSize;
+                    int indentAtTile = cavePos % volcanoCardSize;
+
+                    VolcanoCard volCard = volcanoCards.get(belongToVolcanoCardAt);
+                    volCard.caveAt = indentAtTile;
+                    playerCave.put(newPlayers[i], new Cave(randomAniType, cavePos));
                } else {
+                    int belongToVolcanoCardAt = startLocation / volcanoCardSize;
+                    int indentAtTile = startLocation % volcanoCardSize;
+
+                    VolcanoCard volCard = volcanoCards.get(belongToVolcanoCardAt);
+                    volCard.caveAt = indentAtTile;
+
                     playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
                }
                if (position != null ) {
@@ -327,6 +340,10 @@ public class Board {
           map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
           map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
           map.put("cavePosition",cavePosition);
+
+          List<String> volcanoMapSizeList = new ArrayList<>();
+          volcanoMapSizeList.add(Integer.toString(volcanoCardSize));
+          map.put("volcanoCardSize", volcanoMapSizeList);
           return map;
      }
 

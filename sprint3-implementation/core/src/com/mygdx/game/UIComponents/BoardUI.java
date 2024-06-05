@@ -127,7 +127,7 @@ public class BoardUI extends FieryDragonUI {
         // Draw the text for the current state
         // Ensure this is only drawn if the game has not ended due to time limit
         if (!board.hasTimeLimitReached()) {
-            font.draw(batch, glyphLayout, getX(), getY());
+            font.draw(batch, glyphLayout, getX()/2, getY()/2);
         }
     }
 
@@ -263,9 +263,13 @@ public class BoardUI extends FieryDragonUI {
             positionCoorMap.put(i, new Coordinate(xOffset, yOffset));
             drawTileAt(volcanoMap, i, batch, xOffset, yOffset);
             yOffset += (getSpriteHeightForTileAt(volcanoMap, i) + GUTTER_PX_SIZE) * spriteScale;
+            estimatedHeight += getSpriteHeightForTileAt(volcanoMap, i) + GUTTER_PX_SIZE;
         }
-        estimatedHeight = yOffset * ((boardSideLength + 4f)/(boardSideLength));
-        spriteScale = (getStage().getViewport().getWorldHeight() )/ estimatedHeight;
+//        estimatedHeight = yOffset * ((boardSideLength + 4f)/(boardSideLength));
+//        System.out.println(getX());
+        if (spriteScale == 0) {
+            spriteScale = (0.7f * (getStage().getViewport().getScreenHeight() - getX())) / estimatedHeight;
+        }
 
         currentIndex += boardSideLength;
 
