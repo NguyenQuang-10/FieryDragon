@@ -94,7 +94,8 @@ public class GameScreen implements Screen {
 
         chitCardManager = new ChitCardManager(players, load_option, animalTypeMap);
         boardUI = new BoardUI(200, 500, 8, 6 , board, chitCardManager);
-        chitCardManagerUI = new ChitCardManagerUI(330, 190,6,3, board, chitCardManager);
+        chitCardManagerUI = new ChitCardManagerUI(330, 170, board, chitCardManager);
+
         font = new BitmapFont();
         batch = new SpriteBatch();
         glyphLayout = new GlyphLayout();

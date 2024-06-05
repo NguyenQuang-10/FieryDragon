@@ -7,5 +7,6 @@ public enum AnimalType {
     BAT,
     SPIDER,
     SALAMANDER,
-    SWAP
+    SWAP,
+    TRAP
 }
