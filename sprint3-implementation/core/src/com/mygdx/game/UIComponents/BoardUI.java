@@ -252,7 +252,7 @@ public class BoardUI extends FieryDragonUI {
 
         if (numberOfFillableCorner > 0) {
             numberOfFillableCorner -= 1;
-
+            positionCoorMap.put(currentIndex, new Coordinate(xOffset, yOffset));
             drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
             currentIndex += 1;
         }
@@ -275,7 +275,7 @@ public class BoardUI extends FieryDragonUI {
 
         if (numberOfFillableCorner > 0) {
             numberOfFillableCorner -= 1;
-
+            positionCoorMap.put(currentIndex, new Coordinate(xOffset, yOffset));
             drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
             currentIndex += 1;
         }
@@ -292,7 +292,7 @@ public class BoardUI extends FieryDragonUI {
 
         if (numberOfFillableCorner > 0) {
             numberOfFillableCorner -= 1;
-
+            positionCoorMap.put(currentIndex, new Coordinate(xOffset, yOffset));
             drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
             currentIndex += 1;
         }
@@ -309,7 +309,7 @@ public class BoardUI extends FieryDragonUI {
 
         if (numberOfFillableCorner > 0) {
             numberOfFillableCorner -= 1;
-
+            positionCoorMap.put(currentIndex, new Coordinate(xOffset, yOffset));
             drawTileAt(volcanoMap, currentIndex, batch, xOffset, yOffset);
         }
 

@@ -56,6 +56,7 @@ public class Board {
           Yaml yaml = new Yaml();
           List<String> boardData;
           List<String> playerPosition = new ArrayList<>();
+          List<String> caveDistances = new ArrayList<>();
           List<String> cavePosition = new ArrayList<>();
 
           FileHandle file = Gdx.files.local("save_file.yaml");
@@ -75,6 +76,7 @@ public class Board {
                playerPosition = yamlData.get("playerPositionCustom");
                cavePosition = yamlData.get("cavePosition");
                volcanoCardSize = Integer.parseInt(yamlData.get("volcanoCardSize").get(0));
+               caveDistances = yamlData.get("playerDistanceFromCaveCustom");
 
                tileTypeMap = new AnimalType[boardData.size()];
 
@@ -96,9 +98,9 @@ public class Board {
           // set VolcanoMap and Player
           setVolcanoMap(tileTypeMap);
           if (mode.equals("default")) {
-               setPlayers(players, null,null);
+               setPlayers(players, null,null, null);
           } else if (mode.equals("custom")) {
-               setPlayers(players, playerPosition,cavePosition);
+               setPlayers(players, playerPosition,cavePosition, caveDistances);
           }
           startGameTimer();
      }
@@ -257,7 +259,7 @@ public class Board {
      /*
           @param - newPlayers: array of Player object participating in the game
       */
-     protected void setPlayers(Player[] newPlayers, List<String> position,List<String> cavePosition) {
+     protected void setPlayers(Player[] newPlayers, List<String> position,List<String> cavePosition, List<String> distanceFromCave) {
           int playerCount = newPlayers.length;
 
           // evenly spaces caves out on the board with randomised animal types
@@ -288,13 +290,14 @@ public class Board {
 
                     playerCave.put(newPlayers[i], new Cave(randomAniType, startLocation));
                }
-               if (position != null ) {
+               if (position != null && distanceFromCave != null ) {
                     int currentPosition = Integer.parseInt(position.get(i));
+                    int caveDistance = Integer.parseInt(distanceFromCave.get(i));
                     if (currentPosition != Integer.parseInt(cavePosition.get(i))) {
                          newPlayers[i].isInCave = false;
                     }
                     this.playerPositions.put(newPlayers[i], currentPosition);
-                    this.playerDistanceFromCave.put(newPlayers[i], (currentPosition -  Integer.parseInt(cavePosition.get(i)) + 1 + 24) % 24);
+                    this.playerDistanceFromCave.put(newPlayers[i], caveDistance);
                } else {
                     this.playerPositions.put(newPlayers[i], startLocation);
                     this.playerDistanceFromCave.put(newPlayers[i], 0);
@@ -339,6 +342,7 @@ public class Board {
           }
           map.put("boardCustom", Arrays.stream(volcanoMap).map(Enum::name).collect(Collectors.toList()));
           map.put("playerPositionCustom", Arrays.stream(playerPositions.values().toArray()).map(Object::toString).collect(Collectors.toList()));
+          map.put("playerDistanceFromCaveCustom", Arrays.stream(playerDistanceFromCave.values().toArray()).map(Object::toString).collect(Collectors.toList()));
           map.put("cavePosition",cavePosition);
 
           List<String> volcanoMapSizeList = new ArrayList<>();

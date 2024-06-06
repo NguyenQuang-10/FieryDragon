@@ -110,6 +110,7 @@ public class GameScreen implements Screen {
         data.put("playerPositionCustom", boardData.get("playerPositionCustom"));
         data.put("cavePosition", boardData.get("cavePosition"));
         data.put("volcanoCardSize", boardData.get("volcanoCardSize"));
+        data.put("playerDistanceFromCaveCustom", boardData.get("playerDistanceFromCaveCustom"));
         Map<String, List<String>> chitCardData = chitCardManager.saveChitCard();
         data.put("chitCardType", chitCardData.get("chitCardType"));
         data.put("chitCardNumber", chitCardData.get("chitCardNumber"));
