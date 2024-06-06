@@ -1,0 +1,19 @@
+chitCardType: [TRAP, BABY_DRAGON, SPIDER, BABY_DRAGON, PIRATE_DRAGON, PIRATE_DRAGON,
+  SWAP, BAT, SALAMANDER, BAT, SPIDER, SWAP, SALAMANDER, PIRATE_DRAGON, PIRATE_DRAGON,
+  BAT, BABY_DRAGON, SALAMANDER, SPIDER, TRAP]
+playerNumber: '4'
+boardCustom: [BABY_DRAGON, BAT, SPIDER, SPIDER, BAT, SALAMANDER, SALAMANDER, SPIDER,
+  BAT, BABY_DRAGON, SALAMANDER, BAT, SPIDER, SALAMANDER, BABY_DRAGON, BAT, BABY_DRAGON,
+  SALAMANDER, BAT, SPIDER, BABY_DRAGON]
+playerPositionCustom: ['3', '11', '17', '20']
+currentPlayer: 1
+saved: true
+volcanoCardSize: ['3']
+cavePosition: ['5', '11', '17', '20']
+chitCardFlipped: ['false', 'false', 'false', 'false', 'false', 'false', 'false', 'false',
+  'false', 'false', 'false', 'false', 'false', 'false', 'false', 'false', 'false',
+  'true', 'false', 'false']
+playerDistanceFromCaveCustom: ['1', '-1', '0', '0']
+chitCardNumber: ['2', '2', '1', '1', '1', '2', '0', '3', '2', '2', '2', '0', '3',
+  '2', '1', '1', '3', '1', '3', '1']
+load_option: custom
