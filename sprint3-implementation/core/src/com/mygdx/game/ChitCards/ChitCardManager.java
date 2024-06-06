@@ -82,15 +82,7 @@ public class ChitCardManager implements ITurnManager {
             // shuffle the generated ChitCards
             Collections.shuffle(cards);
         } else if (mode.equals("custom")) {
-//            try {
-//                // load yaml file into yamlData
-//                Yaml yaml = new Yaml();
-//                InputStream inputStream = Files.newInputStream(Paths.get("save_file.yaml"));
-//                yamlData = yaml.load(inputStream);
-//                inputStream.close();
-//            } catch (Exception e) {
-//                System.out.println(e.getMessage());
-//            }
+
             Yaml yaml = new Yaml();
             FileHandle file = Gdx.files.local("save_file.yaml");
             String yamlString = file.readString();
