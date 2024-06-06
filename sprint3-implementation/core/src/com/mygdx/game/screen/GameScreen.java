@@ -158,9 +158,13 @@ public class GameScreen implements Screen {
         stage.draw();
         batch.begin();
 
-        timeLeft -= delta;
-        int minuteLeft = Math.round(timeLeft / 60);
-        int secondLeft = Math.round(timeLeft % 60);
+        if (timeLeft <= 0){
+            timeLeft = 0;
+        } else {
+            timeLeft -= delta;
+        }
+        int minuteLeft = (int) Math.floor(timeLeft / 60);
+        int secondLeft = (int) Math.floor(timeLeft % 60);
         pauseText = new GlyphLayout(font, String.format("Press 0 to pause the game\nTime left: %d min %d sec", minuteLeft, secondLeft));
 
         // Calculate the position to draw the text centered o
