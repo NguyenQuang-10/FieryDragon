@@ -26,7 +26,7 @@ public class ChitCardUI extends FieryDragonUI {
         this.flippedSprite = sprite;
         this.chitCard = chitCard;
 
-        this.hiddenSprite = flippedSprite;
+//        this.hiddenSprite = flippedSprite;
 
         // see libGDX documentation
         setBounds(x, y, hiddenSprite.getWidth(), hiddenSprite.getHeight());
