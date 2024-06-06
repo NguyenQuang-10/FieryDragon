@@ -215,7 +215,35 @@ public class BoardUI extends FieryDragonUI {
     private void drawTileAt(AnimalType[] tileMap, int index, Batch batch, float x, float y) {
         AnimalType volcanoType = tileMap[index];
         Texture volcanoSprite = volcanoSprites.get(volcanoType);
-//        batch.draw(volcanoSprite, x, y);
+        batch.end();
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+
+        float outlineX = x - ((GUTTER_PX_SIZE/2f) * spriteScale);
+        float outlineY = y - ((GUTTER_PX_SIZE/2f) * spriteScale);
+
+
+        float outlineHeight = (volcanoSprite.getHeight()  + GUTTER_PX_SIZE)*spriteScale;
+        float outlineWidth = (volcanoSprite.getWidth() + GUTTER_PX_SIZE) * spriteScale;
+
+
+        if ((index / board.getVolcanoCardSize()) % 2 == 0) {
+            shape.setColor(Color.BROWN);
+        } else {
+            shape.setColor(Color.PURPLE);
+        }
+
+        shape.rect(outlineX, outlineY, outlineWidth, outlineHeight);
+
+
+        if (index == 0) {
+            shape.setColor(Color.RED);
+            shape.rect(outlineX, outlineY, ((GUTTER_PX_SIZE/2f) * spriteScale), outlineHeight);
+        }
+
+
+
+        shape.end();
+        batch.begin();
         batch.draw(volcanoSprite, x, y , volcanoSprite.getWidth() * spriteScale, volcanoSprite.getHeight() * spriteScale);
     }
 

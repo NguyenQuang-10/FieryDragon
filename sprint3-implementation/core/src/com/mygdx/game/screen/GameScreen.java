@@ -45,6 +45,7 @@ public class GameScreen implements Screen {
     GlyphLayout glyphLayout;
     OrthographicCamera camera;
     GlyphLayout pauseText;
+    float timeLeft = 300;
 
     // See libGDX documentation
     // Constructor for GameScreen class, initializes the game objects and UI elements
@@ -138,7 +139,6 @@ public class GameScreen implements Screen {
         stage.addActor(chitCardManagerUI);
         stage.setViewport(new FitViewport(game.WIDTH, game.HEIGHT));
         Gdx.input.setInputProcessor(stage);
-        pauseText = new GlyphLayout(font, "Press 0 to pause the game ");
 
         ScreenUtils.clear(0, 0, 0.2f, 1);
     }
@@ -157,8 +157,14 @@ public class GameScreen implements Screen {
         }
         stage.draw();
         batch.begin();
+
+        timeLeft -= delta;
+        int minuteLeft = Math.round(timeLeft / 60);
+        int secondLeft = Math.round(timeLeft % 60);
+        pauseText = new GlyphLayout(font, String.format("Press 0 to pause the game\nTime left: %d min %d sec", minuteLeft, secondLeft));
+
         // Calculate the position to draw the text centered o
-        float drawX = 100;
+        float drawX = 150;
         float drawY = stage.getViewport().getWorldHeight() / 2f + pauseText.height / 2f;
         // Draw the text on the screen
         font.draw(batch, pauseText, drawX, drawY);

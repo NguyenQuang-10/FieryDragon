@@ -333,6 +333,10 @@ public class Board {
           return gameEnded;
      }
 
+     public int getVolcanoCardSize() {
+          return volcanoCardSize;
+     }
+
      // save information to yaml file
      public HashMap<String, List<String>> save() {
           HashMap<String, List<String>> map = new HashMap<>();
